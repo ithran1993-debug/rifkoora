@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>RifKoora - نتائج المباريات مباشرة</title>
+  <meta name="description" content="RifKoora نتائج كرة القدم، ترتيب الدوريات، وأخبار المباريات">
+  <meta name="theme-color" content="#1a56db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f4f6f9; --card:#fff; --primary:#1a56db; --primary-soft:rgba(26,86,219,.1);
+      --text:#111827; --muted:#6b7280; --border:#e5e7eb; --live:#dc2626;
+      --live-soft:rgba(220,38,38,.1); --ok:#16a34a; --soft:#f3f4f6;
+      --shadow:0 1px 3px rgba(0,0,0,.06); --nav:#fff; --header:#fff;
+    }
+    [data-theme="dark"] {
+      --bg:#0b0f14; --card:#151a22; --primary:#3b82f6; --primary-soft:rgba(59,130,246,.15);
+      --text:#f3f4f6; --muted:#9ca3af; --border:#1f2937; --live:#f87171;
+      --live-soft:rgba(248,113,113,.12); --ok:#4ade80; --soft:#1f2937;
+      --shadow:0 1px 3px rgba(0,0,0,.3); --nav:#111827; --header:#111827;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:Cairo,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:76px}
+    .header{background:var(--header);position:sticky;top:0;z-index:50;box-shadow:var(--shadow);border-bottom:1px solid var(--border)}
+    .header-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 8px}
+    .logo{font-size:20px;font-weight:700;color:var(--primary)}
+    .icon-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;font-size:16px}
+    .date-nav,.tabs{display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none}
+    .date-nav::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}
+    .date-btn,.tab{
+      flex-shrink:0;border:none;border-radius:14px;padding:8px 14px;font-family:inherit;
+      font-size:12px;font-weight:600;color:var(--muted);background:var(--soft);cursor:pointer
+    }
+    .date-btn{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:68px}
+    .date-btn.active,.tab.active{background:var(--primary);color:#fff}
+    .page{display:none}.page.active{display:block}
+    .section{margin:14px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px}
+    .section-title{font-size:14px;font-weight:700}
+    .badge{font-size:11px;background:var(--primary-soft);color:var(--primary);padding:3px 10px;border-radius:20px;font-weight:700}
+    .badge.live{background:var(--live-soft);color:var(--live)}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+    .match{display:flex;align-items:center;gap:8px;padding:13px 14px;border-bottom:1px solid var(--border)}
+    .match:last-child{border-bottom:none}
+    .team{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+    .team.home{justify-content:flex-end}
+    .team-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+    .center{min-width:70px;text-align:center}
+    .time{display:inline-block;background:var(--soft);padding:4px 10px;border-radius:10px;font-size:12px;font-weight:700}
+    .score{font-size:16px;font-weight:800}
+    .minute{display:inline-block;margin-top:3px;background:var(--live-soft);color:var(--live);font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px}
+    table{width:100%;border-collapse:collapse;font-size:12.5px}
+    th{background:var(--soft);padding:11px 6px;color:var(--muted);font-size:11px}
+    td{padding:11px 6px;text-align:center;border-bottom:1px solid var(--border)}
+    td:nth-child(2),th:nth-child(2){text-align:right;font-weight:600}
+    .pos.top{color:var(--ok);font-weight:800}
+    .news-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
+    .news-img{width:100%;height:150px;object-fit:cover;background:var(--soft)}
+    .news-body{padding:14px}
+    .news-title{font-size:15px;font-weight:700;margin-bottom:6px}
+    .news-meta{font-size:12px;color:var(--muted)}
+    .settings{margin:14px;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .s-item{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border);font-weight:600}
+    .s-item:last-child{border-bottom:none}
+    .toggle{width:50px;height:30px;background:#d1d5db;border-radius:15px;position:relative}
+    .toggle.on{background:var(--primary)}
+    .toggle::after{content:"";position:absolute;width:24px;height:24px;background:#fff;border-radius:50%;top:3px;right:3px;transition:.25s}
+    .toggle.on::after{transform:translateX(-20px)}
+    .bottom{position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--nav);display:flex;justify-content:space-around;align-items:center;border-top:1px solid var(--border);z-index:50}
+    .nav-btn{border:none;background:none;color:var(--muted);font-family:inherit;font-size:11px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+    .nav-btn.active{color:var(--primary)}
+    .empty{text-align:center;padding:50px 20px;color:var(--muted)}
+    .loading{text-align:center;padding:40px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div id="page-matches" class="page active">
+    <div class="header">
+      <div class="header-top">
+        <div class="logo">⚽ RifKoora</div>
+        <button class="icon-btn" onclick="loadData()">🔄</button>
+      </div>
+      <div class="date-nav" id="dateNav"></div>
+      <div class="tabs" id="leagueTabs"></div>
+    </div>
+    <div id="matchesBox"><div class="loading">جاري التحميل...</div></div>
+  </div>
+
+  <div id="page-standings" class="page">
+    <div class="header">
+      <div class="header-top"><div class="logo">📊 الترتيب</div></div>
+      <div class="tabs" id="standingsTabs"></div>
+    </div>
+    <div class="section" id="standingsBox"><div class="loading">جاري التحميل...</div></div>
+  </div>
+
+  <div id="page-news" class="page">
+    <div class="header"><div class="header-top"><div class="logo">📰 الأخبار</div></div></div>
+    <div class="section" id="newsBox"></div>
+  </div>
+
+  <div id="page-settings" class="page">
+    <div class="header"><div class="header-top"><div class="logo">⚙️ الإعدادات</div></div></div>
+    <div class="settings">
+      <div class="s-item" onclick="toggleDark()">
+        <span>🌙 الوضع الداكن</span>
+        <div class="toggle" id="darkToggle"></div>
+      </div>
+      <div class="s-item" onclick="shareApp()">
+        <span>📤 مشاركة التطبيق</span>
+        <span style="color:var(--muted)">›</span>
+      </div>
+      <div class="s-item">
+        <span>ℹ️ الإصدار</span>
+        <span style="color:var(--muted);font-weight:500">RifKoora 1.0</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom">
+    <button class="nav-btn" data-page="news" onclick="showPage('news')">📰<span>الأخبار</span></button>
+    <button class="nav-btn" data-page="standings" onclick="showPage('standings')">🏆<span>الترتيب</span></button>
+    <button class="nav-btn active" data-page="matches" onclick="showPage('matches')">⚽<span>المباريات</span></button>
+    <button class="nav-btn" data-page="settings" onclick="showPage('settings')">⚙️<span>الإعدادات</span></button>
+  </nav>
+
+<script>
+let DATA = { matches: [], standings: {}, news: [] };
+let currentOffset = 0;
+let currentLeague = 'الكل';
+let currentStandingLeague = '';
+
+const DAYS = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+function getDateStr(offset=0){
+  const d = new Date(); d.setDate(d.getDate()+offset);
+  return d.toISOString().slice(0,10);
+}
+function labelForOffset(i){
+  if(i===0) return 'اليوم';
+  if(i===-1) return 'أمس';
+  if(i===1) return 'غداً';
+  const d=new Date(); d.setDate(d.getDate()+i);
+  return DAYS[d.getDay()];
+}
+function buildDateNav(){
+  let h='';
+  for(let i=-2;i<=4;i++){
+    const d=new Date(); d.setDate(d.getDate()+i);
+    h+=`<button class="date-btn ${i===currentOffset?'active':''}" data-o="${i}">
+      <span>${labelForOffset(i)}</span><span>${d.getDate()}/${d.getMonth()+1}</span></button>`;
+  }
+  document.getElementById('dateNav').innerHTML=h;
+}
+document.getElementById('dateNav').addEventListener('click',e=>{
+  const b=e.target.closest('.date-btn'); if(!b) return;
+  currentOffset=+b.dataset.o; buildDateNav(); renderMatches();
+});
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.nav-btn[data-page="${name}"]`)?.classList.add('active');
+  if(name==='standings') renderStandings();
+  if(name==='news') renderNews();
+}
+
+function toggleDark(){
+  const on = localStorage.getItem('rk_dark')==='1';
+  localStorage.setItem('rk_dark', on?'0':'1');
+  applyTheme();
+}
+function applyTheme(){
+  const dark = localStorage.getItem('rk_dark')==='1';
+  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
+  document.getElementById('darkToggle')?.classList.toggle('on', dark);
+}
+function shareApp(){
+  const url = location.href;
+  if(navigator.share) navigator.share({title:'RifKoora', text:'تابع النتائج مع RifKoora', url});
+  else { navigator.clipboard?.writeText(url); alert('تم نسخ الرابط'); }
+}
+
+async function loadData(){
+  try{
+    const res = await fetch('data.json?ts='+Date.now());
+    DATA = await res.json();
+  }catch(e){
+    DATA = {matches:[], standings:{}, news:[]};
+  }
+  buildLeagueTabs();
+  buildStandingsTabs();
+  renderMatches();
+  renderStandings();
+  renderNews();
+}
+
+function buildLeagueTabs(){
+  const leagues = ['الكل', ...new Set(DATA.matches.map(m=>m.league).filter(Boolean))];
+  document.getElementById('leagueTabs').innerHTML = leagues.map(l=>
+    `<button class="tab ${l===currentLeague?'active':''}" data-l="${l}">${l}</button>`
+  ).join('');
+}
+document.getElementById('leagueTabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab'); if(!b) return;
+  currentLeague=b.dataset.l; buildLeagueTabs(); renderMatches();
+});
+
+function buildStandingsTabs(){
+  const leagues = Object.keys(DATA.standings||{});
+  if(!leagues.length){ document.getElementById('standingsTabs').innerHTML=''; return; }
+  if(!currentStandingLeague || !leagues.includes(currentStandingLeague)) currentStandingLeague=leagues[0];
+  document.getElementById('standingsTabs').innerHTML = leagues.map(l=>
+    `<button class="tab ${l===currentStandingLeague?'active':''}" data-l="${l}">${l}</button>`
+  ).join('');
+}
+document.getElementById('standingsTabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab'); if(!b) return;
+  currentStandingLeague=b.dataset.l; buildStandingsTabs(); renderStandings();
+});
+
+function renderMatches(){
+  const date = getDateStr(currentOffset);
+  let list = (DATA.matches||[]).filter(m=>m.date===date);
+  if(currentLeague!=='الكل') list = list.filter(m=>m.league===currentLeague);
+  const box = document.getElementById('matchesBox');
+  if(!list.length){ box.innerHTML='<div class="empty">لا توجد مباريات في هذا اليوم</div>'; return; }
+
+  const live = list.filter(m=>m.status==='LIVE'||m.status==='1H'||m.status==='2H'||m.status==='HT');
+  const groups = {};
+  list.forEach(m=>{
+    const k=m.league||'أخرى';
+    if(!groups[k]) groups[k]=[];
+    groups[k].push(m);
+  });
+
+  let html='';
+  if(live.length){
+    html+=`<div class="section"><div class="section-head"><div class="section-title">المباريات الجارية</div><span class="badge live">${live.length}</span></div>
+      <div class="card">${live.map(matchRow).join('')}</div></div>`;
+  }
+  Object.entries(groups).forEach(([league, arr])=>{
+    const rest = arr.filter(m=>!(m.status==='LIVE'||m.status==='1H'||m.status==='2H'||m.status==='HT'));
+    if(!rest.length) return;
+    html+=`<div class="section"><div class="section-head"><div class="section-title">🏆 ${league}</div><span class="badge">${rest.length}</span></div>
+      <div class="card">${rest.map(matchRow).join('')}</div></div>`;
+  });
+  box.innerHTML = html || '<div class="empty">لا توجد مباريات في هذا اليوم</div>';
+}
+
+function matchRow(m){
+  const isLive = ['LIVE','1H','2H','HT'].includes(m.status);
+  const isDone = m.status==='FT';
+  let center;
+  if(isLive || isDone || m.scoreHome!=null){
+    center = `<div class="score">${m.scoreHome??'-'} - ${m.scoreAway??'-'}</div>
+      ${isLive?`<div class="minute">${m.minute||m.status}'</div>`:(isDone?'<div class="minute" style="background:var(--soft);color:var(--muted)">انتهت</div>':'')}`;
+  } else {
+    center = `<div class="time">${m.time||'--:--'}</div>`;
+  }
+  return `<div class="match">
+    <div class="team home"><span class="team-name">${m.home||'—'}</span></div>
+    <div class="center">${center}</div>
+    <div class="team away"><span class="team-name">${m.away||'—'}</span></div>
+  </div>`;
+}
+
+function renderStandings(){
+  const box = document.getElementById('standingsBox');
+  const rows = (DATA.standings||{})[currentStandingLeague] || [];
+  if(!rows.length){ box.innerHTML='<div class="empty">لا توجد بيانات ترتيب</div>'; return; }
+  box.innerHTML = `<div class="card" style="overflow:auto"><table>
+    <thead><tr><th>#</th><th>الفريق</th><th>ل</th><th>ف</th><th>ت</th><th>خ</th><th>+/-</th><th>ن</th></tr></thead>
+    <tbody>${rows.map(r=>{
+      const gd=(r.gf??0)-(r.ga??0);
+      const cls=r.rank<=4?'top':'';
+      return `<tr>
+        <td class="pos ${cls}">${r.rank}</td>
+        <td>${r.team}</td>
+        <td>${r.played??'-'}</td><td>${r.win??'-'}</td><td>${r.draw??'-'}</td><td>${r.lose??'-'}</td>
+        <td>${gd>0?'+'+gd:gd}</td><td style="font-weight:800">${r.points??'-'}</td>
+      </tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+
+function renderNews(){
+  const news = DATA.news||[];
+  const box = document.getElementById('newsBox');
+  if(!news.length){ box.innerHTML='<div class="empty">لا توجد أخبار</div>'; return; }
+  box.innerHTML = news.map(n=>`<div class="news-card">
+    ${n.img?`<img class="news-img" src="${n.img}" alt="">`:''}
+    <div class="news-body"><div class="news-title">${n.title||''}</div><div class="news-meta">${n.meta||''}</div></div>
+  </div>`).join('');
+}
+
+applyTheme();
+buildDateNav();
+loadData();
+</script>
+</body>
+</html>
