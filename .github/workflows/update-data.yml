@@ -1,0 +1,25 @@
+name: Auto Fetch Matches
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install cheerio
+      - run: node scripts/scraper.js
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add draft_data.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update draft matches" && git push)
