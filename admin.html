@@ -3,366 +3,911 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RifKoora - لوحة التحكم الموحدة</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>لوحة تحكم ريف كورة | الإدارة الشاملة</title>
   <style>
-    body{font-family:Cairo,sans-serif;background:#f4f6f9;margin:0;padding:16px;color:#111}
-    h1{font-size:22px;margin:0 0 8px}
-    .sub{color:#6b7280;margin-bottom:18px;font-size:14px}
-    .card{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-    label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
-    input,select,textarea{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:14px;box-sizing:border-box}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btn{border:none;border-radius:12px;padding:12px 16px;font-family:inherit;font-weight:700;cursor:pointer;font-size:14px}
-    .btn-primary{background:#1a56db;color:#fff;width:100%;margin-top:12px}
-    .btn-success{background:#16a34a;color:#fff;width:100%;margin-top:12px;font-size:15px}
-    .btn-soft{background:#eef2ff;color:#1a56db}
-    .btn-danger{background:#fee2e2;color:#b91c1c;padding:6px 10px;font-size:12px}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:8px;border-bottom:1px solid #eee;text-align:right}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .pass-box{max-width:360px;margin:60px auto;background:#fff;padding:24px;border-radius:16px}
-    .hidden{display:none}
-    .ok{background:#dcfce7;color:#166534;padding:12px;border-radius:10px;margin-top:12px;font-size:13px;line-height:1.6}
-    .err{background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin-top:12px;font-size:13px}
-    .draft-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #eee;border-radius:10px;margin-bottom:8px;cursor:pointer}
-    .draft-item input[type="checkbox"]{width:20px;height:20px;margin-left:10px}
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --primary: #0f172a;
+      --accent: #16a34a;
+      --accent-hover: #15803d;
+      --blue: #2563eb;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+    header {
+      background: var(--primary); color: #fff; padding: 16px 20px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    header h1 { margin: 0; font-size: 1.25rem; }
+    header span { font-size: 0.85rem; color: #94a3b8; }
+    .container { max-width: 1050px; margin: 16px auto; padding: 0 14px; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px;
+    }
+    .tab-btn {
+      background: var(--card); border: 1px solid var(--border); padding: 10px 16px;
+      border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;
+      color: var(--text); transition: 0.2s; font-size: 0.95rem;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards & Forms */
+    .card {
+      background: var(--card); border-radius: 14px; padding: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); margin-bottom: 16px;
+    }
+    .card h2 { margin: 0 0 14px; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; color: var(--muted); }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem; background: #fff; color: var(--text);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    .btn {
+      padding: 10px 16px; border: none; border-radius: 8px; font-weight: 700;
+      cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-success { background: var(--accent); color: #fff; }
+    .btn-success:hover { background: var(--accent-hover); }
+    .btn-danger { background: #fee2e2; color: var(--danger); }
+    .btn-light { background: #e2e8f0; color: var(--text); }
+    .btn-sm { padding: 6px 10px; font-size: 0.82rem; }
+
+    /* Week Days Bar */
+    .days-bar {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px;
+    }
+    .day-pill {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: #f8fafc; cursor: pointer; text-align: center; min-width: 95px;
+    }
+    .day-pill.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .day-pill small { display: block; font-size: 0.75rem; opacity: 0.85; }
+
+    /* Tables & Lists */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: right; }
+    th { background: #f8fafc; color: var(--muted); font-weight: 700; }
+    .badge { padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; }
+    .badge-ns { background: #e2e8f0; color: #334155; }
+    .badge-live { background: #fee2e2; color: #dc2626; }
+    .badge-ft { background: #dcfce7; color: #166534; }
+
+    .fetched-item {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px;
+    }
+    .fetched-item input[type="checkbox"] { width: 20px; height: 20px; }
+
+    /* Sticky Publish Footer */
+    .publish-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+      border-top: 1px solid var(--border); padding: 12px 16px;
+      display: flex; justify-content: center; align-items: center; gap: 12px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.06); z-index: 100; flex-wrap: wrap;
+    }
+    #statusMsg { font-size: 0.88rem; font-weight: 700; }
   </style>
 </head>
 <body>
-  <div id="login" class="pass-box">
-    <h1>لوحة التحكم</h1>
-    <p class="sub">أدخل كلمة المرور للمتابعة</p>
-    <input id="pass" type="password" placeholder="كلمة المرور" />
-    <button class="btn btn-primary" onclick="doLogin()">دخول</button>
+
+<header>
+  <div>
+    <h1>⚽ لوحة تحكم ريف كورة & RifGoal</h1>
+    <span>إدارة شاملة للموقع (data.json) والتطبيق (app_data.json)</span>
+  </div>
+  <button class="btn btn-light btn-sm" onclick="loadCurrentData()">🔄 مزامنة البيانات الحالية</button>
+</header>
+
+<div class="container">
+  <!-- Main Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('matchesTab', this)">⚽ المباريات</button>
+    <button class="tab-btn" onclick="switchTab('leaguesTab', this)">🏆 البطولات</button>
+    <button class="tab-btn" onclick="switchTab('standingsTab', this)">📊 الترتيب</button>
+    <button class="tab-btn" onclick="switchTab('newsTab', this)">📰 الأخبار</button>
+    <button class="tab-btn" onclick="switchTab('settingsTab', this)">⚙️ الإعدادات</button>
   </div>
 
-  <div id="panel" class="hidden">
-    <h1>⚽ لوحة تحكم RifKoora الموحدة</h1>
-    <p class="sub">تحكم واحد يغذي موقع الويب (data.json) وتطبيق الموبايل (app_data.json) معاً</p>
-
+  <!-- 1. TAB: MATCHES -->
+  <div id="matchesTab" class="tab-content active">
     <div class="card">
-      <h3>⚙️ إعدادات النشر المباشر (GitHub)</h3>
-      <div class="row">
-        <div><label>اسم المستخدم</label><input id="ghUser" value="ithran1993-debug"></div>
-        <div><label>اسم المستودع</label><input id="ghRepo" value="rifkoora"></div>
-      </div>
-      <label>GitHub Personal Access Token</label>
-      <input id="ghToken" type="password" placeholder="github_pat_...">
-      <button class="btn btn-soft" style="margin-top:10px" onclick="saveGhConfig()">💾 حفظ الإعدادات في المتصفح</button>
+      <h2>📅 اختر يوم الأسبوع لإدارة مبارياته</h2>
+      <div class="days-bar" id="weekDaysBar"></div>
+      <div id="selectedDaySummary" style="font-size:0.9rem; color:var(--muted);"></div>
     </div>
 
+    <!-- Auto Fetched Matches -->
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3>📡 مباريات اليوم المجلوبة تلقائياً</h3>
-        <button class="btn btn-soft" onclick="loadDraft()">🔄 تحديث</button>
-      </div>
-      <p class="sub" id="draftStatus">جاري تحميل المسودة...</p>
-      <div id="draftList" style="max-height:320px;overflow:auto"></div>
-      <button class="btn btn-primary" onclick="addSelectedDrafts()">✅ إضافة المباريات المختارة إلى قائمتي</button>
+      <h2>
+        <span>📡 المباريات المجلوبة تلقائياً</span>
+        <div>
+          <button class="btn btn-light btn-sm" onclick="fetchDraftMatches()">🔄 جلب من المسودة</button>
+          <button class="btn btn-primary btn-sm" onclick="importSelectedMatches()">➕ إضافة المحدد لليوم المختار</button>
+        </div>
+      </h2>
+      <div id="draftList" style="max-height: 260px; overflow-y: auto;"></div>
     </div>
 
+    <!-- Add / Edit Match Form -->
     <div class="card">
-      <h3>➕ إضافة مباراة يدوياً</h3>
-      <div class="row">
-        <div><label>الدوري</label><input id="mLeague" placeholder="الدوري الإنجليزي"></div>
-        <div><label>التاريخ</label><input id="mDate" type="date"></div>
-      </div>
-      <div class="row">
-        <div><label>الفريق المضيف</label><input id="mHome" placeholder="ليفربول"></div>
-        <div><label>الفريق الضيف</label><input id="mAway" placeholder="أرسنال"></div>
-      </div>
-      <div class="row">
-        <div><label>الوقت</label><input id="mTime" placeholder="18:30"></div>
+      <h2 id="matchFormTitle">➕ إضافة / تعديل مباراة لليوم المحدد</h2>
+      <input type="hidden" id="editMatchId" />
+      <div class="grid">
+        <div>
+          <label>البطولة</label>
+          <select id="mLeague"></select>
+        </div>
+        <div>
+          <label>التاريخ (YYYY-MM-DD)</label>
+          <input type="date" id="mDate" />
+        </div>
+        <div>
+          <label>التوقيت</label>
+          <input type="time" id="mTime" value="21:00" />
+        </div>
         <div>
           <label>الحالة</label>
           <select id="mStatus">
             <option value="NS">لم تبدأ (NS)</option>
-            <option value="LIVE">جارية (LIVE)</option>
+            <option value="LIVE">مباشر الآن (LIVE)</option>
             <option value="FT">انتهت (FT)</option>
           </select>
         </div>
+        <div>
+          <label>الفريق المستضيف (صاحب الأرض)</label>
+          <input type="text" id="mHome" placeholder="مثال: ريال مدريد" />
+        </div>
+        <div>
+          <label>شعار المستضيف (رابط اختياري)</label>
+          <input type="text" id="mHomeLogo" placeholder="https://..." />
+        </div>
+        <div>
+          <label>الفريق الضيف</label>
+          <input type="text" id="mAway" placeholder="مثال: برشلونة" />
+        </div>
+        <div>
+          <label>شعار الضيف (رابط اختياري)</label>
+          <input type="text" id="mAwayLogo" placeholder="https://..." />
+        </div>
+        <div>
+          <label>نتيجة المستضيف</label>
+          <input type="number" id="mScoreHome" placeholder="-" />
+        </div>
+        <div>
+          <label>نتيجة الضيف</label>
+          <input type="number" id="mScoreAway" placeholder="-" />
+        </div>
+        <div>
+          <label>الدقيقة (في حال المباشر)</label>
+          <input type="text" id="mMinute" placeholder="مثال: 65'" />
+        </div>
+        <div>
+          <label>القناة الناقلة</label>
+          <input type="text" id="mChannel" placeholder="beIN SPORTS 1" />
+        </div>
+        <div>
+          <label>المعلق</label>
+          <input type="text" id="mCommentator" placeholder="عصام الشوالي" />
+        </div>
+        <div>
+          <label>الملعب</label>
+          <input type="text" id="mStadium" placeholder="سانتياغو برنابيو" />
+        </div>
       </div>
-      <div class="row">
-        <div><label>نتيجة المضيف</label><input id="mSH" type="number" placeholder="-"></div>
-        <div><label>نتيجة الضيف</label><input id="mSA" type="number" placeholder="-"></div>
+      <div style="margin-top: 14px; display: flex; gap: 8px;">
+        <button class="btn btn-primary" onclick="saveMatch()">💾 حفظ المباراة في الجدول</button>
+        <button class="btn btn-light" onclick="resetMatchForm()">إلغاء / تفريغ</button>
       </div>
-      <div class="row">
-        <div><label>الدقيقة (إذا جارية)</label><input id="mMin" type="number" placeholder="67"></div>
-        <div><label>القناة الناقلة</label><input id="mChannel" placeholder="beIN Sports 1"></div>
-      </div>
-      <div class="row">
-        <div><label>الملعب</label><input id="mStadium" placeholder="أنفيلد"></div>
-        <div><label>المعلق / الحكم</label><input id="mCommentator" placeholder="حفيظ دراجي"></div>
-      </div>
-      <button class="btn btn-primary" onclick="addMatch()">➕ إضافة المباراة</button>
     </div>
 
+    <!-- Scheduled Matches for Selected Day -->
     <div class="card">
-      <h3>📋 المباريات المعتمدة للنشر (<span id="countMatches">0</span>)</h3>
-      <div style="overflow:auto">
+      <h2 id="dayMatchesHeader">📋 مباريات اليوم المحددة للنشر</h2>
+      <div class="table-wrap">
         <table>
-          <thead><tr><th>الدوري</th><th>المباراة</th><th>النتيجة</th><th>الوقت</th><th></th></tr></thead>
-          <tbody id="matchTable"></tbody>
+          <thead>
+            <tr>
+              <th>البطولة</th>
+              <th>المباراة</th>
+              <th>الوقت</th>
+              <th>الحالة / النتيجة</th>
+              <th>التفاصيل</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="matchesTableBody"></tbody>
         </table>
       </div>
     </div>
+  </div>
+
+  <!-- 2. TAB: LEAGUES -->
+  <div id="leaguesTab" class="tab-content">
+    <div class="card">
+      <h2>🏆 إضافة بطولة جديدة</h2>
+      <div class="grid">
+        <div>
+          <label>اسم البطولة</label>
+          <input type="text" id="lName" placeholder="مثال: الدوري المغربي" />
+        </div>
+        <div>
+          <label>رابط شعار البطولة (اختياري)</label>
+          <input type="text" id="lLogo" placeholder="https://..." />
+        </div>
+        <div>
+          <label>ترتيب الظهور</label>
+          <input type="number" id="lOrder" value="1" />
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top: 12px;" onclick="addLeague()">➕ إضافة البطولة</button>
+    </div>
 
     <div class="card">
-      <h3>🚀 النشر المباشر للموقع والتطبيق</h3>
-      <button class="btn btn-success" onclick="publishAll()">🚀 إرسال ونشر التحديث للموقع والتطبيق الآن</button>
-      <div class="actions">
-        <button class="btn btn-soft" onclick="exportJSON()">⬇ تحميل نسخة احتياطية</button>
-        <button class="btn btn-danger" onclick="resetData()">🗑 مسح القائمة</button>
+      <h2>قائمة البطولات المعتمدة</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الترتيب</th>
+              <th>اسم البطولة</th>
+              <th>الحالة</th>
+              <th>حذف</th>
+            </tr>
+          </thead>
+          <tbody id="leaguesTableBody"></tbody>
+        </table>
       </div>
-      <div id="msg"></div>
     </div>
   </div>
 
+  <!-- 3. TAB: STANDINGS -->
+  <div id="standingsTab" class="tab-content">
+    <div class="card">
+      <h2>📊 إدارة ترتيب الفرق حسب البطولة</h2>
+      <div class="grid" style="margin-bottom: 14px;">
+        <div>
+          <label>اختر البطولة لتعديل ترتيبها</label>
+          <select id="standingLeagueSelect" onchange="renderStandingsTable()"></select>
+        </div>
+      </div>
+
+      <div class="grid" style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid var(--border);">
+        <div><label>المركز</label><input type="number" id="stRank" value="1" /></div>
+        <div><label>اسم الفريق</label><input type="text" id="stTeam" placeholder="مثال: ريال مدريد" /></div>
+        <div><label>لعب</label><input type="number" id="stPlayed" value="0" /></div>
+        <div><label>فاز</label><input type="number" id="stWin" value="0" /></div>
+        <div><label>تعادل</label><input type="number" id="stDraw" value="0" /></div>
+        <div><label>خسر</label><input type="number" id="stLose" value="0" /></div>
+        <div><label>له (أهداف)</label><input type="number" id="stGf" value="0" /></div>
+        <div><label>عليه</label><input type="number" id="stGa" value="0" /></div>
+        <div><label>النقاط</label><input type="number" id="stPoints" value="0" /></div>
+      </div>
+      <button class="btn btn-primary" style="margin-top: 12px;" onclick="saveTeamStanding()">💾 إضافة / تحديث الفريق في الترتيب</button>
+    </div>
+
+    <div class="card">
+      <h2 id="standingTableTitle">جدول الترتيب</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الفريق</th>
+              <th>لعب</th>
+              <th>ف</th>
+              <th>ت</th>
+              <th>خ</th>
+              <th>له/عليه</th>
+              <th>نقاط</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="standingsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. TAB: NEWS -->
+  <div id="newsTab" class="tab-content">
+    <div class="card">
+      <h2 id="newsFormTitle">📰 إضافة / تعديل خبر رياضي</h2>
+      <input type="hidden" id="editNewsId" />
+      <div class="grid">
+        <div>
+          <label>عنوان الخبر</label>
+          <input type="text" id="nTitle" placeholder="عنوان جذاب للخبر..." />
+        </div>
+        <div>
+          <label>البطولة / التصنيف</label>
+          <select id="nLeague"></select>
+        </div>
+        <div>
+          <label>رابط صورة الخبر</label>
+          <input type="text" id="nImage" placeholder="https://..." />
+        </div>
+      </div>
+      <div style="margin-top: 10px;">
+        <label>تفاصيل الخبر</label>
+        <textarea id="nSummary" placeholder="اكتب تفاصيل الخبر هنا..."></textarea>
+      </div>
+      <div style="margin-top: 12px; display: flex; gap: 8px;">
+        <button class="btn btn-primary" onclick="saveNews()">💾 حفظ الخبر</button>
+        <button class="btn btn-light" onclick="resetNewsForm()">تفريغ</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>الأخبار المنشورة</h2>
+      <div id="newsList"></div>
+    </div>
+  </div>
+
+  <!-- 5. TAB: SETTINGS -->
+  <div id="settingsTab" class="tab-content">
+    <div class="card">
+      <h2>🌐 إعدادات الموقع والتطبيق العامة</h2>
+      <div class="grid">
+        <div>
+          <label>اسم الموقع / التطبيق</label>
+          <input type="text" id="setSiteTitle" value="ريف كورة" />
+        </div>
+        <div>
+          <label>شريط الأخبار العاجلة / التنبيه العلوي</label>
+          <input type="text" id="setAnnouncement" placeholder="مرحباً بكم في تغطية مباريات اليوم..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔑 إعدادات الربط المباشر مع GitHub (تحفظ في متصفحك فقط)</h2>
+      <div class="grid">
+        <div>
+          <label>اسم المستخدم (Owner)</label>
+          <input type="text" id="ghOwner" value="ithran1993-debug" />
+        </div>
+        <div>
+          <label>اسم المستودع (Repo)</label>
+          <input type="text" id="ghRepo" value="rifkoora" />
+        </div>
+        <div>
+          <label>GitHub Personal Access Token</label>
+          <input type="password" id="ghToken" placeholder="ghp_..." />
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-top: 12px;" onclick="saveGitHubConfig()">💾 حفظ إعدادات GitHub في المتصفح</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Publish Bar -->
+<div class="publish-bar">
+  <button class="btn btn-success" onclick="publishAll()">🚀 نشر جميع التحديثات إلى الموقع والتطبيق الآن</button>
+  <span id="statusMsg"></span>
+</div>
+
 <script>
-const PASS = 'admin123';
-let DATA = { matches: [], standings: {}, news: [] };
-let DRAFT_MATCHES = [];
-
-function doLogin(){
-  if(document.getElementById('pass').value === PASS){
-    document.getElementById('login').classList.add('hidden');
-    document.getElementById('panel').classList.remove('hidden');
-    loadGhConfig();
-    fetch('data.json?t=' + Date.now()).then(r=>r.json()).then(d=>{
-      DATA = d;
-      renderMatches();
-    }).catch(()=>{});
-    loadDraft();
-  } else alert('كلمة المرور خاطئة');
-}
-
-function saveGhConfig(){
-  localStorage.setItem('gh_user', val('ghUser'));
-  localStorage.setItem('gh_repo', val('ghRepo'));
-  localStorage.setItem('gh_token', val('ghToken'));
-  showMsg('تم حفظ إعدادات GitHub في متصفحك بنجاح', false);
-}
-
-function loadGhConfig(){
-  if(localStorage.getItem('gh_user')) document.getElementById('ghUser').value = localStorage.getItem('gh_user');
-  if(localStorage.getItem('gh_repo')) document.getElementById('ghRepo').value = localStorage.getItem('gh_repo');
-  if(localStorage.getItem('gh_token')) document.getElementById('ghToken').value = localStorage.getItem('gh_token');
-}
-
-function loadDraft(){
-  fetch('draft_data.json?t=' + Date.now())
-    .then(r => r.json())
-    .then(d => {
-      DRAFT_MATCHES = d.matches || [];
-      document.getElementById('draftStatus').textContent = `آخر تحديث تلقائي: ${new Date(d.updatedAt).toLocaleTimeString('ar-MA')} (${DRAFT_MATCHES.length} مباراة)`;
-      const list = document.getElementById('draftList');
-      list.innerHTML = DRAFT_MATCHES.map((m, idx) => `
-        <label class="draft-item">
-          <div style="display:flex;align-items:center">
-            <input type="checkbox" class="draft-chk" value="${idx}">
-            <div>
-              <strong>${m.home} × ${m.away}</strong>
-              <div style="font-size:12px;color:#666">${m.league} • ${m.time} ${m.channel ? '• ' + m.channel : ''}</div>
-            </div>
-          </div>
-          <span style="font-size:12px;background:#eef2ff;padding:3px 8px;border-radius:6px">${m.status}</span>
-        </label>
-      `).join('') || '<p>لا توجد مباريات في المسودة حالياً.</p>';
-    })
-    .catch(() => {
-      document.getElementById('draftStatus').textContent = 'لم يتم تشغيل الجلب التلقائي بعد (شغّل Action من GitHub).';
-    });
-}
-
-function addSelectedDrafts(){
-  const chks = document.querySelectorAll('.draft-chk:checked');
-  if(!chks.length) return alert('اختر مباراة واحدة على الأقل');
-  chks.forEach(c => {
-    const m = DRAFT_MATCHES[Number(c.value)];
-    const exists = DATA.matches.some(x => x.home === m.home && x.away === m.away && x.date === m.date);
-    if(!exists) DATA.matches.push(m);
-    c.checked = false;
-  });
-  renderMatches();
-  showMsg(`تمت إضافة ${chks.length} مباريات. اضغط "إرسال ونشر" لتحديث الموقع والتطبيق.`, false);
-}
-
-function addMatch(){
-  const m = {
-    id: Date.now(),
-    league: val('mLeague') || 'مباريات اليوم',
-    home: val('mHome'),
-    away: val('mAway'),
-    homeLogo: '',
-    awayLogo: '',
-    date: val('mDate') || new Date().toISOString().slice(0,10),
-    time: val('mTime') || '20:00',
-    status: val('mStatus'),
-    scoreHome: num('mSH'),
-    scoreAway: num('mSA'),
-    minute: num('mMin'),
-    channel: val('mChannel'),
-    stadium: val('mStadium'),
-    commentator: val('mCommentator')
-  };
-  if(!m.home || !m.away) return alert('أدخل اسم الفريقين');
-  DATA.matches.push(m);
-  renderMatches();
-  showMsg('تمت إضافة المباراة إلى القائمة', false);
-}
-
-function renderMatches(){
-  document.getElementById('countMatches').textContent = DATA.matches.length;
-  const tb = document.getElementById('matchTable');
-  tb.innerHTML = (DATA.matches||[]).map((m)=>`<tr>
-    <td>${m.league||''}</td>
-    <td><b>${m.home}</b> × <b>${m.away}</b></td>
-    <td>${m.scoreHome !== null ? m.scoreHome + ' - ' + m.scoreAway : '-'}</td>
-    <td>${m.time}</td>
-    <td><button class="btn btn-danger" onclick="delMatch(${m.id})">حذف</button></td>
-  </tr>`).join('') || '<tr><td colspan="5">لا توجد مباريات مختارة للنشر</td></tr>';
-}
-
-function delMatch(id){
-  DATA.matches = DATA.matches.filter(m=>m.id!==id);
-  renderMatches();
-}
-
-// تحويل البيانات لصيغة FootballMatch.fromApiSports الخاصة بالتطبيق
-function buildAppJson(matches){
-  const statusMap = {
-    'NS': 'Not Started',
-    'LIVE': 'In Play',
-    'FT': 'Match Finished'
+  // Master State
+  let appState = {
+    settings: { siteTitle: "ريف كورة", announcement: "" },
+    leagues: [
+      { id: "cl", name: "دوري أبطال أوروبا", logo: "", order: 1, active: true },
+      { id: "pl", name: "الدوري الإنجليزي", logo: "", order: 2, active: true },
+      { id: "ll", name: "الدوري الإسباني", logo: "", order: 3, active: true },
+      { id: "sa", name: "الدوري الإيطالي", logo: "", order: 4, active: true },
+      { id: "bl", name: "الدوري الألماني", logo: "", order: 5, active: true },
+      { id: "fr", name: "الدوري الفرنسي", logo: "", order: 6, active: true },
+      { id: "ma", name: "الدوري المغربي", logo: "", order: 7, active: true },
+      { id: "int", name: "مباريات دولية وودية", logo: "", order: 8, active: true }
+    ],
+    matches: [],
+    standings: {},
+    news: []
   };
 
-  return {
-    get: "fixtures",
-    results: matches.length,
-    response: matches.map((m, idx) => {
-      const isoDate = `${m.date}T${(m.time && m.time.includes(':')) ? m.time : '20:00'}:00+00:00`;
-      const elapsedNum = typeof m.minute === 'number' ? m.minute : parseInt(m.minute) || null;
-      return {
-        fixture: {
-          id: Number(m.id) || (10000 + idx),
-          referee: m.commentator || m.channel || "",
-          timezone: "UTC",
-          date: isoDate,
-          venue: {
-            id: 1,
-            name: m.stadium || m.channel || ""
-          },
-          status: {
-            long: statusMap[m.status] || m.status,
-            short: m.status || "NS",
-            elapsed: elapsedNum
-          }
-        },
-        league: {
-          id: 100 + idx,
-          name: m.league || "مباريات اليوم",
-          country: "World"
-        },
-        teams: {
-          home: {
-            id: 1000 + idx * 2,
-            name: m.home,
-            logo: m.homeLogo || ""
-          },
-          away: {
-            id: 1001 + idx * 2,
-            name: m.away,
-            logo: m.awayLogo || ""
-          }
-        },
-        goals: {
-          home: m.scoreHome,
-          away: m.scoreAway
-        }
+  let draftMatches = [];
+  let selectedDate = new Date().toISOString().slice(0, 10);
+
+  // Initialize
+  window.onload = () => {
+    loadGitHubConfig();
+    renderWeekDays();
+    document.getElementById('mDate').value = selectedDate;
+    populateLeagueSelects();
+    loadCurrentData();
+    fetchDraftMatches();
+  };
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Week Days Bar (Today + 6 days)
+  function renderWeekDays() {
+    const bar = document.getElementById('weekDaysBar');
+    bar.innerHTML = '';
+    const daysAr = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    for (let i = -1; i <= 5; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      const iso = d.toISOString().slice(0, 10);
+      const dayName = i === 0 ? 'اليوم' : i === 1 ? 'غداً' : i === -1 ? 'أمس' : daysAr[d.getDay()];
+      const count = appState.matches.filter(m => m.date === iso).length;
+
+      const pill = document.createElement('div');
+      pill.className = 'day-pill' + (iso === selectedDate ? ' active' : '');
+      pill.innerHTML = `<strong>${dayName}</strong><small>${iso}</small><small>(${count} مباراة)</small>`;
+      pill.onclick = () => {
+        selectedDate = iso;
+        document.getElementById('mDate').value = iso;
+        renderWeekDays();
+        renderMatchesTable();
       };
-    })
-  };
-}
-
-async function uploadFileToGitHub(user, repo, token, path, contentObj, commitMsg){
-  const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
-  const getRes = await fetch(apiUrl, {
-    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
-  });
-  let sha = undefined;
-  if(getRes.ok){
-    const fileData = await getRes.json();
-    sha = fileData.sha;
+      bar.appendChild(pill);
+    }
   }
 
-  const jsonStr = JSON.stringify(contentObj, null, 2);
-  const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
-
-  const putRes = await fetch(apiUrl, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      message: commitMsg,
-      content: base64Content,
-      sha
-    })
-  });
-
-  if(!putRes.ok){
-    const err = await putRes.json();
-    throw new Error(`${path}: ${err.message || 'فشل الرفع'}`);
+  function populateLeagueSelects() {
+    const selects = ['mLeague', 'standingLeagueSelect', 'nLeague'];
+    selects.forEach(id => {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = appState.leagues.map(l => `<option value="${l.name}">${l.name}</option>`).join('');
+      if (prev) sel.value = prev;
+    });
   }
-}
 
-async function publishAll(){
-  const user = val('ghUser');
-  const repo = val('ghRepo');
-  const token = val('ghToken');
-  if(!user || !repo || !token) return showMsg('يرجى إدخال وحفظ إعدادات GitHub Token أولاً', true);
+  // Load existing live data.json so nothing gets overwritten accidentally
+  async function loadCurrentData() {
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    setStatus('⏳ جاري جلب البيانات الحالية من الموقع...', '#2563eb');
+    try {
+      const res = await fetch(`https://${owner}.github.io/${repo}/data.json?t=${Date.now()}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.settings) appState.settings = { ...appState.settings, ...data.settings };
+        if (Array.isArray(data.leagues) && data.leagues.length) appState.leagues = data.leagues;
+        if (Array.isArray(data.matches)) appState.matches = data.matches;
+        if (data.standings && typeof data.standings === 'object') appState.standings = data.standings;
+        if (Array.isArray(data.news)) appState.news = data.news;
 
-  showMsg('⏳ جاري تحديث الموقع (data.json) والتطبيق (app_data.json)...', false);
-
-  try {
-    // 1. نشر ملف الموقع
-    await uploadFileToGitHub(user, repo, token, 'data.json', DATA, 'Update web data.json');
-    // 2. نشر ملف التطبيق بصيغة API-Sports
-    const appPayload = buildAppJson(DATA.matches);
-    await uploadFileToGitHub(user, repo, token, 'app_data.json', appPayload, 'Update mobile app_data.json');
-
-    showMsg(
-      `✅ تم النشر للموقع والتطبيق بنجاح!\n` +
-      `🔗 رابط بيانات التطبيق: https://${user}.github.io/${repo}/app_data.json`,
-      false
-    );
-  } catch(e){
-    showMsg('❌ خطأ أثناء النشر: ' + e.message, true);
+        document.getElementById('setSiteTitle').value = appState.settings.siteTitle || 'ريف كورة';
+        document.getElementById('setAnnouncement').value = appState.settings.announcement || '';
+        populateLeagueSelects();
+        renderAll();
+        setStatus('✅ تم تحميل البيانات الحالية بنجاح', '#16a34a');
+      } else {
+        setStatus('⚠️ لم يتم العثور على بيانات سابقة، سيتم إنشاء هيكل جديد.', '#d97706');
+      }
+    } catch (e) {
+      setStatus('⚠️ تعذر الاتصال لجلب البيانات السابقة.', '#ef4444');
+    }
   }
-}
 
-function val(id){ return document.getElementById(id).value.trim(); }
-function num(id){ const v=document.getElementById(id).value; return v===''? null : Number(v); }
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(DATA,null,2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'data.json';
-  a.click();
-}
-function resetData(){
-  if(confirm('مسح كل المباريات المختارة؟')){ DATA.matches=[]; renderMatches(); }
-}
-function showMsg(t, isErr){
-  const m = document.getElementById('msg');
-  m.className = isErr ? 'err' : 'ok';
-  m.style.whiteSpace = 'pre-line';
-  m.textContent = t;
-}
-document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
+  async function fetchDraftMatches() {
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const list = document.getElementById('draftList');
+    list.innerHTML = 'جاري التحميل...';
+    try {
+      const res = await fetch(`https://${owner}.github.io/${repo}/draft_data.json?t=${Date.now()}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      draftMatches = data.matches || [];
+      if (!draftMatches.length) {
+        list.innerHTML = '<p style="color:var(--muted)">لا توجد مباريات في المسودة حالياً.</p>';
+        return;
+      }
+      list.innerHTML = draftMatches.map((m, idx) => `
+        <label class="fetched-item">
+          <div>
+            <strong>${m.home} × ${m.away}</strong>
+            <div style="font-size:0.8rem; color:var(--muted);">${m.league} • ${m.date || selectedDate} • ${m.time} • ${m.channel || ''}</div>
+          </div>
+          <input type="checkbox" class="draft-chk" value="${idx}" />
+        </label>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = '<p style="color:var(--danger)">تعذر جلب draft_data.json. تأكد من تشغيل GitHub Actions.</p>';
+    }
+  }
+
+  function importSelectedMatches() {
+    const chks = document.querySelectorAll('.draft-chk:checked');
+    if (!chks.length) return alert('حدد مباراة واحدة على الأقل أولاً.');
+    chks.forEach(c => {
+      const m = draftMatches[Number(c.value)];
+      appState.matches.push({
+        id: Date.now() + Math.floor(Math.random() * 10000),
+        league: m.league || 'مباريات اليوم',
+        home: m.home,
+        homeLogo: m.homeLogo || '',
+        away: m.away,
+        awayLogo: m.awayLogo || '',
+        date: m.date || selectedDate,
+        time: m.time || '20:00',
+        status: m.status || 'NS',
+        scoreHome: m.scoreHome ?? null,
+        scoreAway: m.scoreAway ?? null,
+        minute: m.minute || null,
+        channel: m.channel || '',
+        commentator: m.commentator || '',
+        stadium: m.stadium || ''
+      });
+      c.checked = false;
+    });
+    renderAll();
+  }
+
+  // Matches CRUD
+  function saveMatch() {
+    const home = document.getElementById('mHome').value.trim();
+    const away = document.getElementById('mAway').value.trim();
+    if (!home || !away) return alert('يرجى إدخال اسمي الفريقين.');
+
+    const editId = document.getElementById('editMatchId').value;
+    const sH = document.getElementById('mScoreHome').value;
+    const sA = document.getElementById('mScoreAway').value;
+
+    const matchObj = {
+      id: editId ? Number(editId) : Date.now(),
+      league: document.getElementById('mLeague').value,
+      date: document.getElementById('mDate').value || selectedDate,
+      time: document.getElementById('mTime').value || '20:00',
+      status: document.getElementById('mStatus').value,
+      home,
+      homeLogo: document.getElementById('mHomeLogo').value.trim(),
+      away,
+      awayLogo: document.getElementById('mAwayLogo').value.trim(),
+      scoreHome: sH !== '' ? Number(sH) : null,
+      scoreAway: sA !== '' ? Number(sA) : null,
+      minute: document.getElementById('mMinute').value.trim() || null,
+      channel: document.getElementById('mChannel').value.trim(),
+      commentator: document.getElementById('mCommentator').value.trim(),
+      stadium: document.getElementById('mStadium').value.trim()
+    };
+
+    if (editId) {
+      const idx = appState.matches.findIndex(m => m.id === Number(editId));
+      if (idx > -1) appState.matches[idx] = matchObj;
+    } else {
+      appState.matches.push(matchObj);
+    }
+
+    selectedDate = matchObj.date;
+    resetMatchForm();
+    renderAll();
+  }
+
+  function editMatch(id) {
+    const m = appState.matches.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById('editMatchId').value = m.id;
+    document.getElementById('mLeague').value = m.league;
+    document.getElementById('mDate').value = m.date;
+    document.getElementById('mTime').value = m.time;
+    document.getElementById('mStatus').value = m.status;
+    document.getElementById('mHome').value = m.home;
+    document.getElementById('mHomeLogo').value = m.homeLogo || '';
+    document.getElementById('mAway').value = m.away;
+    document.getElementById('mAwayLogo').value = m.awayLogo || '';
+    document.getElementById('mScoreHome').value = m.scoreHome ?? '';
+    document.getElementById('mScoreAway').value = m.scoreAway ?? '';
+    document.getElementById('mMinute').value = m.minute || '';
+    document.getElementById('mChannel').value = m.channel || '';
+    document.getElementById('mCommentator').value = m.commentator || '';
+    document.getElementById('mStadium').value = m.stadium || '';
+    document.getElementById('matchFormTitle').innerText = '✏️ تعديل المباراة';
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  function deleteMatch(id) {
+    appState.matches = appState.matches.filter(m => m.id !== id);
+    renderAll();
+  }
+
+  function resetMatchForm() {
+    document.getElementById('editMatchId').value = '';
+    document.getElementById('mHome').value = '';
+    document.getElementById('mHomeLogo').value = '';
+    document.getElementById('mAway').value = '';
+    document.getElementById('mAwayLogo').value = '';
+    document.getElementById('mScoreHome').value = '';
+    document.getElementById('mScoreAway').value = '';
+    document.getElementById('mMinute').value = '';
+    document.getElementById('mChannel').value = '';
+    document.getElementById('mCommentator').value = '';
+    document.getElementById('mStadium').value = '';
+    document.getElementById('matchFormTitle').innerText = '➕ إضافة / تعديل مباراة لليوم المحدد';
+  }
+
+  function renderMatchesTable() {
+    const tbody = document.getElementById('matchesTableBody');
+    const dayMatches = appState.matches.filter(m => m.date === selectedDate);
+    document.getElementById('dayMatchesHeader').innerText = `📋 مباريات يوم ${selectedDate} (${dayMatches.length})`;
+
+    if (!dayMatches.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted);">لا توجد مباريات مجدولة لهذا اليوم بعد.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = dayMatches.map(m => {
+      const score = (m.scoreHome !== null && m.scoreAway !== null) ? `${m.scoreHome} - ${m.scoreAway}` : '-';
+      const badgeClass = m.status === 'LIVE' ? 'badge-live' : m.status === 'FT' ? 'badge-ft' : 'badge-ns';
+      return `
+        <tr>
+          <td>${m.league}</td>
+          <td><strong>${m.home} × ${m.away}</strong></td>
+          <td>${m.time}</td>
+          <td><span class="badge ${badgeClass}">${m.status}</span> ${score}</td>
+          <td style="font-size:0.8rem; color:var(--muted);">${m.channel || ''} ${m.commentator ? '• ' + m.commentator : ''}</td>
+          <td>
+            <button class="btn btn-light btn-sm" onclick="editMatch(${m.id})">تعديل</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteMatch(${m.id})">حذف</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Leagues CRUD
+  function addLeague() {
+    const name = document.getElementById('lName').value.trim();
+    if (!name) return alert('أدخل اسم البطولة.');
+    appState.leagues.push({
+      id: 'lg_' + Date.now(),
+      name,
+      logo: document.getElementById('lLogo').value.trim(),
+      order: Number(document.getElementById('lOrder').value) || 1,
+      active: true
+    });
+    appState.leagues.sort((a, b) => a.order - b.order);
+    document.getElementById('lName').value = '';
+    document.getElementById('lLogo').value = '';
+    populateLeagueSelects();
+    renderLeaguesTable();
+  }
+
+  function deleteLeague(id) {
+    appState.leagues = appState.leagues.filter(l => l.id !== id);
+    populateLeagueSelects();
+    renderLeaguesTable();
+  }
+
+  function renderLeaguesTable() {
+    const tbody = document.getElementById('leaguesTableBody');
+    tbody.innerHTML = appState.leagues.map(l => `
+      <tr>
+        <td>${l.order}</td>
+        <td><strong>${l.name}</strong></td>
+        <td><span class="badge badge-ft">مفعلة</span></td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteLeague('${l.id}')">حذف</button></td>
+      </tr>
+    `).join('');
+  }
+
+  // Standings CRUD
+  function saveTeamStanding() {
+    const league = document.getElementById('standingLeagueSelect').value;
+    const team = document.getElementById('stTeam').value.trim();
+    if (!league || !team) return alert('اختر البطولة وأدخل اسم الفريق.');
+
+    if (!appState.standings[league]) appState.standings[league] = [];
+    const row = {
+      rank: Number(document.getElementById('stRank').value) || 1,
+      team,
+      played: Number(document.getElementById('stPlayed').value) || 0,
+      win: Number(document.getElementById('stWin').value) || 0,
+      draw: Number(document.getElementById('stDraw').value) || 0,
+      lose: Number(document.getElementById('stLose').value) || 0,
+      gf: Number(document.getElementById('stGf').value) || 0,
+      ga: Number(document.getElementById('stGa').value) || 0,
+      points: Number(document.getElementById('stPoints').value) || 0
+    };
+
+    const idx = appState.standings[league].findIndex(x => x.team === team);
+    if (idx > -1) appState.standings[league][idx] = row;
+    else appState.standings[league].push(row);
+
+    appState.standings[league].sort((a, b) => a.rank - b.rank || b.points - a.points);
+    document.getElementById('stTeam').value = '';
+    renderStandingsTable();
+  }
+
+  function deleteStandingRow(league, team) {
+    if (!appState.standings[league]) return;
+    appState.standings[league] = appState.standings[league].filter(x => x.team !== team);
+    renderStandingsTable();
+  }
+
+  function renderStandingsTable() {
+    const league = document.getElementById('standingLeagueSelect').value;
+    document.getElementById('standingTableTitle').innerText = `جدول ترتيب: ${league}`;
+    const tbody = document.getElementById('standingsTableBody');
+    const list = appState.standings[league] || [];
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--muted);">لا توجد فرق مسجلة في ترتيب هذه البطولة بعد.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(r => `
+      <tr>
+        <td>${r.rank}</td>
+        <td><strong>${r.team}</strong></td>
+        <td>${r.played}</td>
+        <td>${r.win}</td>
+        <td>${r.draw}</td>
+        <td>${r.lose}</td>
+        <td>${r.gf}:${r.ga}</td>
+        <td><strong>${r.points}</strong></td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteStandingRow('${league}', '${r.team}')">حذف</button></td>
+      </tr>
+    `).join('');
+  }
+
+  // News CRUD
+  function saveNews() {
+    const title = document.getElementById('nTitle').value.trim();
+    if (!title) return alert('أدخل عنوان الخبر.');
+    const editId = document.getElementById('editNewsId').value;
+    const item = {
+      id: editId ? Number(editId) : Date.now(),
+      title,
+      league: document.getElementById('nLeague').value,
+      image: document.getElementById('nImage').value.trim(),
+      summary: document.getElementById('nSummary').value.trim(),
+      date: new Date().toISOString().slice(0, 10)
+    };
+    if (editId) {
+      const idx = appState.news.findIndex(n => n.id === Number(editId));
+      if (idx > -1) appState.news[idx] = item;
+    } else {
+      appState.news.unshift(item);
+    }
+    resetNewsForm();
+    renderNewsList();
+  }
+
+  function deleteNews(id) {
+    appState.news = appState.news.filter(n => n.id !== id);
+    renderNewsList();
+  }
+
+  function resetNewsForm() {
+    document.getElementById('editNewsId').value = '';
+    document.getElementById('nTitle').value = '';
+    document.getElementById('nImage').value = '';
+    document.getElementById('nSummary').value = '';
+  }
+
+  function renderNewsList() {
+    const wrap = document.getElementById('newsList');
+    if (!appState.news.length) {
+      wrap.innerHTML = '<p style="color:var(--muted);">لا توجد أخبار مضافة بعد.</p>';
+      return;
+    }
+    wrap.innerHTML = appState.news.map(n => `
+      <div class="fetched-item">
+        <div>
+          <strong>${n.title}</strong>
+          <div style="font-size:0.8rem; color:var(--muted);">${n.league} • ${n.date}</div>
+          <p style="margin:4px 0 0; font-size:0.85rem;">${n.summary}</p>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="deleteNews(${n.id})">حذف</button>
+      </div>
+    `).join('');
+  }
+
+  function renderAll() {
+    renderWeekDays();
+    renderMatchesTable();
+    renderLeaguesTable();
+    renderStandingsTable();
+    renderNewsList();
+  }
+
+  // GitHub Storage & Publishing
+  function saveGitHubConfig() {
+    localStorage.setItem('rk_owner', document.getElementById('ghOwner').value.trim());
+    localStorage.setItem('rk_repo', document.getElementById('ghRepo').value.trim());
+    localStorage.setItem('rk_token', document.getElementById('ghToken').value.trim());
+    alert('✅ تم حفظ إعدادات الربط في متصفحك بنجاح!');
+  }
+
+  function loadGitHubConfig() {
+    if (localStorage.getItem('rk_owner')) document.getElementById('ghOwner').value = localStorage.getItem('rk_owner');
+    if (localStorage.getItem('rk_repo')) document.getElementById('ghRepo').value = localStorage.getItem('rk_repo');
+    if (localStorage.getItem('rk_token')) document.getElementById('ghToken').value = localStorage.getItem('rk_token');
+  }
+
+  function setStatus(msg, color) {
+    const el = document.getElementById('statusMsg');
+    el.innerText = msg;
+    el.style.color = color || '#0f172a';
+  }
+
+  async function uploadFileToGitHub(owner, repo, token, path, contentObj, commitMessage) {
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    let sha = undefined;
+    const getRes = await fetch(apiUrl, { headers: { Authorization: `token ${token}` } });
+    if (getRes.ok) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+
+    const jsonStr = JSON.stringify(contentObj, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: commitMessage,
+        content: base64Content,
+        sha
+      })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || `خطأ في تحديث ${path}`);
+    }
+  }
+
+  async function publishAll() {
+    const owner = document.getElementById('ghOwner').value.trim();
+    const repo = document.getElementById('ghRepo').value.trim();
+    const token = document.getElementById('ghToken').value.trim();
+
+    if (!token) {
+      alert('يرجى إدخال وحفظ GitHub Token في تبويب الإعدادات أولاً.');
+      return;
+    }
+
+    appState.settings.siteTitle = document.getElementById('setSiteTitle').value.trim() || 'ريف كورة';
+    appState.settings.announcement = document.getElementById('setAnnouncement').value.trim();
+
+    const finalPayload = {
+      updatedAt: new Date().toISOString(),
+      settings: appState.settings,
+      leagues: appState.leagues,
+      matches: appState.matches,
+      standings: appState.standings,
+      news: appState.news
+    };
+
+    try {
+      setStatus('⏳ جاري نشر التحديثات إلى الموقع (data.json)...', '#2563eb');
+      await uploadFileToGitHub(owner, repo, token, 'data.json', finalPayload, 'Update web data.json from Admin');
+
+      setStatus('⏳ جاري نشر التحديثات إلى التطبيق (app_data.json)...', '#2563eb');
+      await uploadFileToGitHub(owner, repo, token, 'app_data.json', finalPayload, 'Update mobile app_data.json from Admin');
+
+      setStatus('✅ تم نشر جميع الأقسام بنجاح للموقع والتطبيق!', '#16a34a');
+    } catch (err) {
+      setStatus(`❌ فشل النشر: ${err.message}`, '#ef4444');
+    }
+  }
 </script>
 </body>
 </html>
