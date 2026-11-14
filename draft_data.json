@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T15:58:07.555Z",
+  "updatedAt": "2026-11-14T16:30:36.425Z",
   "matches": [
     {
       "id": 401916338,
@@ -775,7 +775,7 @@
       "status": "LIVE",
       "scoreHome": 0,
       "scoreAway": 0,
-      "minute": "45'+3'",
+      "minute": "67'",
       "channel": "",
       "commentator": "",
       "stadium": "Basra International Stadium"
@@ -791,10 +791,10 @@
       "date": "2026-11-14",
       "timestamp": "2026-11-14T16:00Z",
       "time": "16:00",
-      "status": "NS",
-      "scoreHome": null,
-      "scoreAway": null,
-      "minute": null,
+      "status": "LIVE",
+      "scoreHome": 1,
+      "scoreAway": 0,
+      "minute": "30'",
       "channel": "",
       "commentator": "",
       "stadium": "Hoima City Stadium"
