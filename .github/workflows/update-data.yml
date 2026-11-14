@@ -1,25 +1,31 @@
-name: Auto Fetch Matches
+name: Auto Live Scores & Weekly Data
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *' # يعمل تلقائياً كل 5 دقائق على مدار الساعة
+  workflow_dispatch:      # يتيح التشغيل اليدوي في أي وقت
 
 permissions:
   contents: write
 
 jobs:
-  fetch:
+  update-sports-data:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install cheerio
-      - run: node scripts/scraper.js
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add draft_data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update draft matches" && git push)
+
+      - name: Run Live Scraper
+        run: node scripts/scraper.js
+
+      - name: Commit and Push Updates
+        run: |
+          git config --global user.name "RifKoora Bot"
+          git config --global user.email "bot@rifkoora.github.io"
+          git add data.json app_data.json draft_data.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update live scores, week matches & standings" && git push)
