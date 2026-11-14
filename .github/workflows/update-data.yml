@@ -2,8 +2,8 @@ name: Auto Live Scores & Weekly Data
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # يعمل تلقائياً كل 5 دقائق على مدار الساعة
-  workflow_dispatch:      # يتيح التشغيل اليدوي في أي وقت
+    - cron: '0 8,16,23 * * *' # يعمل 3 مرات يومياً فقط (8 صباحاً، 4 عصراً، 11 ليلاً بتوقيت UTC)
+  workflow_dispatch:          # يتيح لك التشغيل اليدوي في أي لحظة بضغطة زر
 
 permissions:
   contents: write
@@ -28,4 +28,4 @@ jobs:
           git config --global user.name "RifKoora Bot"
           git config --global user.email "bot@rifkoora.github.io"
           git add data.json app_data.json draft_data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update live scores, week matches & standings" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update weekly matches & standings" && git push)
