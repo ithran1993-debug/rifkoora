@@ -1,16 +1,16 @@
 {
   "get": "fixtures",
-  "results": 3,
+  "results": 14,
   "response": [
     {
       "fixture": {
-        "id": 1,
-        "referee": "",
+        "id": 1794658259623,
+        "referee": "بى ان سبورت اكسترا 1",
         "timezone": "UTC",
-        "date": "2026-11-11T21:00:00+00:00",
+        "date": "2026-11-14T18:00:00+00:00",
         "venue": {
           "id": 1,
-          "name": ""
+          "name": "بى ان سبورت اكسترا 1"
         },
         "status": {
           "long": "Not Started",
@@ -20,19 +20,19 @@
       },
       "league": {
         "id": 100,
-        "name": "دوري أبطال أوروبا",
+        "name": "تصفيات أمم أفريقيا",
         "country": "World"
       },
       "teams": {
         "home": {
           "id": 1000,
-          "name": "ريال مدريد",
-          "logo": ""
+          "name": "أوغندا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Uganda2018_7_26_19_22.jpg"
         },
         "away": {
           "id": 1001,
-          "name": "مانشستر سيتي",
-          "logo": ""
+          "name": "بوتسوانا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Botswana2018_7_26_19_24.jpg"
         }
       },
       "goals": {
@@ -42,48 +42,86 @@
     },
     {
       "fixture": {
-        "id": 2,
-        "referee": "",
+        "id": 1794658259624,
+        "referee": "beIN SPORTS 7",
         "timezone": "UTC",
-        "date": "2026-11-11T18:30:00+00:00",
+        "date": "2026-11-14T21:00:00+00:00",
         "venue": {
           "id": 1,
-          "name": ""
+          "name": "beIN SPORTS 7"
         },
         "status": {
-          "long": "In Play",
-          "short": "LIVE",
-          "elapsed": 67
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
         }
       },
       "league": {
         "id": 101,
-        "name": "الدوري الإنجليزي",
+        "name": "تصفيات أمم أفريقيا",
         "country": "World"
       },
       "teams": {
         "home": {
           "id": 1002,
-          "name": "ليفربول",
-          "logo": ""
+          "name": "أنجـــــولا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Angola2018_7_26_19_26.jpg"
         },
         "away": {
           "id": 1003,
-          "name": "أرسنال",
-          "logo": ""
+          "name": "جنوب السودان",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\SouthSudan2018_7_26_19_33.jpg"
         }
       },
       "goals": {
-        "home": 1,
-        "away": 1
+        "home": null,
+        "away": null
       }
     },
     {
       "fixture": {
-        "id": 3,
+        "id": 1794658259626,
+        "referee": "beIN SPORTS 1",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 1"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 102,
+        "name": "تصفيات أمم أفريقيا",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1004,
+          "name": "الجزائر",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Algeria2018_7_26_19_30.jpg"
+        },
+        "away": {
+          "id": 1005,
+          "name": "توجـــو",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Togo2018_7_26_19_26.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259628,
         "referee": "",
         "timezone": "UTC",
-        "date": "2026-11-12T20:00:00+00:00",
+        "date": "2026-11-14T16:00:00+00:00",
         "venue": {
           "id": 1,
           "name": ""
@@ -95,20 +133,400 @@
         }
       },
       "league": {
-        "id": 102,
-        "name": "الدوري الإسباني",
+        "id": 103,
+        "name": "دوري الأمم الأوروبية",
         "country": "World"
       },
       "teams": {
         "home": {
-          "id": 1004,
-          "name": "برشلونة",
-          "logo": ""
+          "id": 1006,
+          "name": "كوسوفو",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\12\\Kosovo2018_9_12_12_42.jpg"
         },
         "away": {
-          "id": 1005,
-          "name": "أتلتيكو مدريد",
-          "logo": ""
+          "id": 1007,
+          "name": "الكيان الصهيوني",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2022\\9\\15\\YK-Generic-team-logo2022_9_15_21_43.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259629,
+        "referee": "beIN SPORTS 4",
+        "timezone": "UTC",
+        "date": "2026-11-14T19:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 4"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 104,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1008,
+          "name": "جورجيا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\12\\Georgia2018_9_12_12_39.jpg"
+        },
+        "away": {
+          "id": 1009,
+          "name": "المجر",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Hungary2018_9_10_18_26.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259631,
+        "referee": "beIN SPORTS 2",
+        "timezone": "UTC",
+        "date": "2026-11-14T19:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 2"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 105,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1010,
+          "name": "النرويج",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Norway2018_9_10_18_32.jpg"
+        },
+        "away": {
+          "id": 1011,
+          "name": "ويلز",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2024\\3\\21\\1JjnDm6Es30LryHzbudyEw_96x962024_3_21_0_45.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259632,
+        "referee": "beIN SPORTS 2",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:45:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 2"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 106,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1012,
+          "name": "البرتغال",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Portugal2018_7_24_14_41.jpg"
+        },
+        "away": {
+          "id": 1013,
+          "name": "الدنمارك",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Denmark2018_7_24_14_41.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259633,
+        "referee": "beIN SPORTS 4",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:45:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 4"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 107,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1014,
+          "name": "النمسا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Austria2018_9_10_18_26.jpg"
+        },
+        "away": {
+          "id": 1015,
+          "name": "أيرلندا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Ireland2018_9_10_18_31.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259635,
+        "referee": "beIN SPORTS 6",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:45:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 6"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 108,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1016,
+          "name": "إيرلندا الشمالية",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\NorthernIreland2018_9_10_18_30.jpg"
+        },
+        "away": {
+          "id": 1017,
+          "name": "أوكرانيا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Ukraine2018_9_10_18_28.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259636,
+        "referee": "beIN SPORTS 5",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:45:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 5"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 109,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1018,
+          "name": "رومانيا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\Romania2018_9_10_18_33.jpg"
+        },
+        "away": {
+          "id": 1019,
+          "name": "بولندا",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Poland2018_7_24_14_37.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259638,
+        "referee": "beIN SPORTS 3",
+        "timezone": "UTC",
+        "date": "2026-11-14T21:45:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "beIN SPORTS 3"
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 110,
+        "name": "دوري الأمم الأوروبية",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1020,
+          "name": "السويد",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Sweden2018_7_24_14_43.jpg"
+        },
+        "away": {
+          "id": 1021,
+          "name": "البوسنة والهرسك",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\9\\10\\BosniaAndHerzegovina2018_9_10_18_27.jpg"
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259639,
+        "referee": "أبوظبي الرياضية - HD1",
+        "timezone": "UTC",
+        "date": "2026-11-14T01:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": "أبوظبي الرياضية - HD1"
+        },
+        "status": {
+          "long": "Match Finished",
+          "short": "FT",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 111,
+        "name": "مباريات ودية - منتخبات",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1022,
+          "name": "الأرجنتين",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Argentina2018_7_24_14_45.jpg"
+        },
+        "away": {
+          "id": 1023,
+          "name": "أوروجواي",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Uruguay2018_7_24_14_42.jpg"
+        }
+      },
+      "goals": {
+        "home": 1,
+        "away": 2
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259640,
+        "referee": "",
+        "timezone": "UTC",
+        "date": "2026-11-14T12:15:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": ""
+        },
+        "status": {
+          "long": "In Play",
+          "short": "LIVE",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 112,
+        "name": "مباريات ودية - منتخبات",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1024,
+          "name": "اليابان",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2026\\7\\5\\12026_7_5_1_6.webp"
+        },
+        "away": {
+          "id": 1025,
+          "name": "البرازيل",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\24\\Brazil2018_7_24_14_44.jpg"
+        }
+      },
+      "goals": {
+        "home": 1,
+        "away": 1
+      }
+    },
+    {
+      "fixture": {
+        "id": 1794658259642,
+        "referee": "",
+        "timezone": "UTC",
+        "date": "2026-11-14T17:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": ""
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 113,
+        "name": "مباريات ودية - منتخبات",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1026,
+          "name": "فلسطين",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2018\\7\\26\\Palestine2018_7_26_19_16.jpg"
+        },
+        "away": {
+          "id": 1027,
+          "name": "إيران",
+          "logo": "https://mediayk.gemini.media/img/yallakora/iosteams/120\\2026\\6\\11\\iran_square_icon_6402026_6_11_0_25.webp"
         }
       },
       "goals": {
