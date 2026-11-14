@@ -45,20 +45,108 @@
   ],
   "standings": {
     "الدوري الإنجليزي": [
-      {"rank": 1, "team": "ليفربول", "played": 11, "win": 9, "draw": 1, "lose": 1, "gf": 22, "ga": 8, "points": 28},
-      {"rank": 2, "team": "مانشستر سيتي", "played": 11, "win": 8, "draw": 2, "lose": 1, "gf": 24, "ga": 10, "points": 26},
-      {"rank": 3, "team": "أرسنال", "played": 11, "win": 7, "draw": 3, "lose": 1, "gf": 20, "ga": 9, "points": 24},
-      {"rank": 4, "team": "تشيلسي", "played": 11, "win": 6, "draw": 3, "lose": 2, "gf": 18, "ga": 12, "points": 21},
-      {"rank": 5, "team": "توتنهام", "played": 11, "win": 5, "draw": 2, "lose": 4, "gf": 16, "ga": 14, "points": 17}
+      {
+        "rank": 1,
+        "team": "ليفربول",
+        "played": 11,
+        "win": 9,
+        "draw": 1,
+        "lose": 1,
+        "gf": 22,
+        "ga": 8,
+        "points": 28
+      },
+      {
+        "rank": 2,
+        "team": "مانشستر سيتي",
+        "played": 11,
+        "win": 8,
+        "draw": 2,
+        "lose": 1,
+        "gf": 24,
+        "ga": 10,
+        "points": 26
+      },
+      {
+        "rank": 3,
+        "team": "أرسنال",
+        "played": 11,
+        "win": 7,
+        "draw": 3,
+        "lose": 1,
+        "gf": 20,
+        "ga": 9,
+        "points": 24
+      },
+      {
+        "rank": 4,
+        "team": "تشيلسي",
+        "played": 11,
+        "win": 6,
+        "draw": 3,
+        "lose": 2,
+        "gf": 18,
+        "ga": 12,
+        "points": 21
+      },
+      {
+        "rank": 5,
+        "team": "توتنهام",
+        "played": 11,
+        "win": 5,
+        "draw": 2,
+        "lose": 4,
+        "gf": 16,
+        "ga": 14,
+        "points": 17
+      }
     ],
     "الدوري الإسباني": [
-      {"rank": 1, "team": "ريال مدريد", "played": 12, "win": 10, "draw": 1, "lose": 1, "gf": 28, "ga": 9, "points": 31},
-      {"rank": 2, "team": "برشلونة", "played": 12, "win": 9, "draw": 2, "lose": 1, "gf": 30, "ga": 11, "points": 29},
-      {"rank": 3, "team": "أتلتيكو مدريد", "played": 12, "win": 7, "draw": 3, "lose": 2, "gf": 19, "ga": 10, "points": 24}
+      {
+        "rank": 1,
+        "team": "ريال مدريد",
+        "played": 12,
+        "win": 10,
+        "draw": 1,
+        "lose": 1,
+        "gf": 28,
+        "ga": 9,
+        "points": 31
+      },
+      {
+        "rank": 2,
+        "team": "برشلونة",
+        "played": 12,
+        "win": 9,
+        "draw": 2,
+        "lose": 1,
+        "gf": 30,
+        "ga": 11,
+        "points": 29
+      },
+      {
+        "rank": 3,
+        "team": "أتلتيكو مدريد",
+        "played": 12,
+        "win": 7,
+        "draw": 3,
+        "lose": 2,
+        "gf": 19,
+        "ga": 10,
+        "points": 24
+      }
     ]
   },
   "news": [
-    {"title": "أبرز مباريات اليوم", "meta": "اليوم • ملخص", "img": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=300&fit=crop"},
-    {"title": "تحديث ترتيب الدوريات", "meta": "محدث", "img": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&h=300&fit=crop"}
+    {
+      "title": "أبرز مباريات اليوم",
+      "meta": "اليوم • ملخص",
+      "img": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=300&fit=crop"
+    },
+    {
+      "title": "تحديث ترتيب الدوريات",
+      "meta": "محدث",
+      "img": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&h=300&fit=crop"
+    }
   ]
 }
