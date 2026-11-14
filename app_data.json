@@ -1,0 +1,120 @@
+{
+  "get": "fixtures",
+  "results": 3,
+  "response": [
+    {
+      "fixture": {
+        "id": 1,
+        "referee": "",
+        "timezone": "UTC",
+        "date": "2026-11-11T21:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": ""
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 100,
+        "name": "دوري أبطال أوروبا",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1000,
+          "name": "ريال مدريد",
+          "logo": ""
+        },
+        "away": {
+          "id": 1001,
+          "name": "مانشستر سيتي",
+          "logo": ""
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    },
+    {
+      "fixture": {
+        "id": 2,
+        "referee": "",
+        "timezone": "UTC",
+        "date": "2026-11-11T18:30:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": ""
+        },
+        "status": {
+          "long": "In Play",
+          "short": "LIVE",
+          "elapsed": 67
+        }
+      },
+      "league": {
+        "id": 101,
+        "name": "الدوري الإنجليزي",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1002,
+          "name": "ليفربول",
+          "logo": ""
+        },
+        "away": {
+          "id": 1003,
+          "name": "أرسنال",
+          "logo": ""
+        }
+      },
+      "goals": {
+        "home": 1,
+        "away": 1
+      }
+    },
+    {
+      "fixture": {
+        "id": 3,
+        "referee": "",
+        "timezone": "UTC",
+        "date": "2026-11-12T20:00:00+00:00",
+        "venue": {
+          "id": 1,
+          "name": ""
+        },
+        "status": {
+          "long": "Not Started",
+          "short": "NS",
+          "elapsed": null
+        }
+      },
+      "league": {
+        "id": 102,
+        "name": "الدوري الإسباني",
+        "country": "World"
+      },
+      "teams": {
+        "home": {
+          "id": 1004,
+          "name": "برشلونة",
+          "logo": ""
+        },
+        "away": {
+          "id": 1005,
+          "name": "أتلتيكو مدريد",
+          "logo": ""
+        }
+      },
+      "goals": {
+        "home": null,
+        "away": null
+      }
+    }
+  ]
+}
