@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RifKoora - لوحة التحكم الذكية</title>
+  <title>RifKoora - لوحة التحكم الموحدة</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body{font-family:Cairo,sans-serif;background:#f4f6f9;margin:0;padding:16px;color:#111}
@@ -15,7 +15,7 @@
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:none;border-radius:12px;padding:12px 16px;font-family:inherit;font-weight:700;cursor:pointer;font-size:14px}
     .btn-primary{background:#1a56db;color:#fff;width:100%;margin-top:12px}
-    .btn-success{background:#16a34a;color:#fff;width:100%;margin-top:12px}
+    .btn-success{background:#16a34a;color:#fff;width:100%;margin-top:12px;font-size:15px}
     .btn-soft{background:#eef2ff;color:#1a56db}
     .btn-danger{background:#fee2e2;color:#b91c1c;padding:6px 10px;font-size:12px}
     table{width:100%;border-collapse:collapse;font-size:13px}
@@ -23,9 +23,9 @@
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .pass-box{max-width:360px;margin:60px auto;background:#fff;padding:24px;border-radius:16px}
     .hidden{display:none}
-    .ok{background:#dcfce7;color:#166534;padding:10px 12px;border-radius:10px;margin-top:10px;font-size:13px}
-    .err{background:#fee2e2;color:#991b1b;padding:10px 12px;border-radius:10px;margin-top:10px;font-size:13px}
-    .draft-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #eee;border-radius:10px;margin-bottom:8px}
+    .ok{background:#dcfce7;color:#166534;padding:12px;border-radius:10px;margin-top:12px;font-size:13px;line-height:1.6}
+    .err{background:#fee2e2;color:#991b1b;padding:12px;border-radius:10px;margin-top:12px;font-size:13px}
+    .draft-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #eee;border-radius:10px;margin-bottom:8px;cursor:pointer}
     .draft-item input[type="checkbox"]{width:20px;height:20px;margin-left:10px}
   </style>
 </head>
@@ -38,33 +38,30 @@
   </div>
 
   <div id="panel" class="hidden">
-    <h1>⚽ لوحة تحكم RifKoora</h1>
-    <p class="sub">اختر المباريات المجلوبة تلقائياً ثم اضغط "نشر مباشر" لتحديث الموقع والتطبيق فوراً</p>
+    <h1>⚽ لوحة تحكم RifKoora الموحدة</h1>
+    <p class="sub">تحكم واحد يغذي موقع الويب (data.json) وتطبيق الموبايل (app_data.json) معاً</p>
 
-    <!-- إعدادات الربط مع GitHub -->
     <div class="card">
-      <h3>⚙️ إعدادات النشر المباشر (تُحفظ في متصفحك مرة واحدة)</h3>
+      <h3>⚙️ إعدادات النشر المباشر (GitHub)</h3>
       <div class="row">
-        <div><label>اسم المستخدم في GitHub</label><input id="ghUser" value="ithran1993-debug"></div>
+        <div><label>اسم المستخدم</label><input id="ghUser" value="ithran1993-debug"></div>
         <div><label>اسم المستودع</label><input id="ghRepo" value="rifkoora"></div>
       </div>
       <label>GitHub Personal Access Token</label>
       <input id="ghToken" type="password" placeholder="github_pat_...">
-      <button class="btn btn-soft" style="margin-top:10px" onclick="saveGhConfig()">💾 حفظ إعدادات GitHub</button>
+      <button class="btn btn-soft" style="margin-top:10px" onclick="saveGhConfig()">💾 حفظ الإعدادات في المتصفح</button>
     </div>
 
-    <!-- قسم الجلب التلقائي -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <h3>📡 مباريات اليوم المجلوبة تلقائياً</h3>
-        <button class="btn btn-soft" onclick="loadDraft()">🔄 تحديث القائمة</button>
+        <button class="btn btn-soft" onclick="loadDraft()">🔄 تحديث</button>
       </div>
       <p class="sub" id="draftStatus">جاري تحميل المسودة...</p>
       <div id="draftList" style="max-height:320px;overflow:auto"></div>
       <button class="btn btn-primary" onclick="addSelectedDrafts()">✅ إضافة المباريات المختارة إلى قائمتي</button>
     </div>
 
-    <!-- إضافة مباراة يدوياً -->
     <div class="card">
       <h3>➕ إضافة مباراة يدوياً</h3>
       <div class="row">
@@ -80,9 +77,9 @@
         <div>
           <label>الحالة</label>
           <select id="mStatus">
-            <option value="NS">لم تبدأ</option>
-            <option value="LIVE">جارية</option>
-            <option value="FT">انتهت</option>
+            <option value="NS">لم تبدأ (NS)</option>
+            <option value="LIVE">جارية (LIVE)</option>
+            <option value="FT">انتهت (FT)</option>
           </select>
         </div>
       </div>
@@ -94,10 +91,13 @@
         <div><label>الدقيقة (إذا جارية)</label><input id="mMin" type="number" placeholder="67"></div>
         <div><label>القناة الناقلة</label><input id="mChannel" placeholder="beIN Sports 1"></div>
       </div>
+      <div class="row">
+        <div><label>الملعب</label><input id="mStadium" placeholder="أنفيلد"></div>
+        <div><label>المعلق / الحكم</label><input id="mCommentator" placeholder="حفيظ دراجي"></div>
+      </div>
       <button class="btn btn-primary" onclick="addMatch()">➕ إضافة المباراة</button>
     </div>
 
-    <!-- المباريات المنشورة -->
     <div class="card">
       <h3>📋 المباريات المعتمدة للنشر (<span id="countMatches">0</span>)</h3>
       <div style="overflow:auto">
@@ -108,13 +108,12 @@
       </div>
     </div>
 
-    <!-- النشر المباشر -->
     <div class="card">
       <h3>🚀 النشر المباشر للموقع والتطبيق</h3>
-      <button class="btn btn-success" onclick="publishToGitHub()">🚀 إرسال ونشر التحديث الآن</button>
+      <button class="btn btn-success" onclick="publishAll()">🚀 إرسال ونشر التحديث للموقع والتطبيق الآن</button>
       <div class="actions">
         <button class="btn btn-soft" onclick="exportJSON()">⬇ تحميل نسخة احتياطية</button>
-        <button class="btn btn-danger" onclick="resetData()">🗑 مسح الكل</button>
+        <button class="btn btn-danger" onclick="resetData()">🗑 مسح القائمة</button>
       </div>
       <div id="msg"></div>
     </div>
@@ -186,13 +185,13 @@ function addSelectedDrafts(){
     c.checked = false;
   });
   renderMatches();
-  showMsg(`تمت إضافة ${chks.length} مباريات إلى قائمة النشر. اضغط "إرسال ونشر" لتفعيلها.`, false);
+  showMsg(`تمت إضافة ${chks.length} مباريات. اضغط "إرسال ونشر" لتحديث الموقع والتطبيق.`, false);
 }
 
 function addMatch(){
   const m = {
     id: Date.now(),
-    league: val('mLeague'),
+    league: val('mLeague') || 'مباريات اليوم',
     home: val('mHome'),
     away: val('mAway'),
     homeLogo: '',
@@ -203,7 +202,9 @@ function addMatch(){
     scoreHome: num('mSH'),
     scoreAway: num('mSA'),
     minute: num('mMin'),
-    channel: val('mChannel')
+    channel: val('mChannel'),
+    stadium: val('mStadium'),
+    commentator: val('mCommentator')
   };
   if(!m.home || !m.away) return alert('أدخل اسم الفريقين');
   DATA.matches.push(m);
@@ -228,53 +229,118 @@ function delMatch(id){
   renderMatches();
 }
 
-async function publishToGitHub(){
+// تحويل البيانات لصيغة FootballMatch.fromApiSports الخاصة بالتطبيق
+function buildAppJson(matches){
+  const statusMap = {
+    'NS': 'Not Started',
+    'LIVE': 'In Play',
+    'FT': 'Match Finished'
+  };
+
+  return {
+    get: "fixtures",
+    results: matches.length,
+    response: matches.map((m, idx) => {
+      const isoDate = `${m.date}T${(m.time && m.time.includes(':')) ? m.time : '20:00'}:00+00:00`;
+      const elapsedNum = typeof m.minute === 'number' ? m.minute : parseInt(m.minute) || null;
+      return {
+        fixture: {
+          id: Number(m.id) || (10000 + idx),
+          referee: m.commentator || m.channel || "",
+          timezone: "UTC",
+          date: isoDate,
+          venue: {
+            id: 1,
+            name: m.stadium || m.channel || ""
+          },
+          status: {
+            long: statusMap[m.status] || m.status,
+            short: m.status || "NS",
+            elapsed: elapsedNum
+          }
+        },
+        league: {
+          id: 100 + idx,
+          name: m.league || "مباريات اليوم",
+          country: "World"
+        },
+        teams: {
+          home: {
+            id: 1000 + idx * 2,
+            name: m.home,
+            logo: m.homeLogo || ""
+          },
+          away: {
+            id: 1001 + idx * 2,
+            name: m.away,
+            logo: m.awayLogo || ""
+          }
+        },
+        goals: {
+          home: m.scoreHome,
+          away: m.scoreAway
+        }
+      };
+    })
+  };
+}
+
+async function uploadFileToGitHub(user, repo, token, path, contentObj, commitMsg){
+  const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+  const getRes = await fetch(apiUrl, {
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
+  });
+  let sha = undefined;
+  if(getRes.ok){
+    const fileData = await getRes.json();
+    sha = fileData.sha;
+  }
+
+  const jsonStr = JSON.stringify(contentObj, null, 2);
+  const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+  const putRes = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: commitMsg,
+      content: base64Content,
+      sha
+    })
+  });
+
+  if(!putRes.ok){
+    const err = await putRes.json();
+    throw new Error(`${path}: ${err.message || 'فشل الرفع'}`);
+  }
+}
+
+async function publishAll(){
   const user = val('ghUser');
   const repo = val('ghRepo');
   const token = val('ghToken');
-  if(!user || !repo || !token) return showMsg('يرجى إدخال وحفظ إعدادات GitHub Token أولاً في الأعلى', true);
+  if(!user || !repo || !token) return showMsg('يرجى إدخال وحفظ إعدادات GitHub Token أولاً', true);
 
-  showMsg('⏳ جاري الإرسال والنشر إلى GitHub...', false);
-  const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/data.json`;
+  showMsg('⏳ جاري تحديث الموقع (data.json) والتطبيق (app_data.json)...', false);
 
   try {
-    // 1. جلب SHA الحالي للملف
-    const getRes = await fetch(apiUrl, {
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    let sha = undefined;
-    if(getRes.ok){
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-    }
+    // 1. نشر ملف الموقع
+    await uploadFileToGitHub(user, repo, token, 'data.json', DATA, 'Update web data.json');
+    // 2. نشر ملف التطبيق بصيغة API-Sports
+    const appPayload = buildAppJson(DATA.matches);
+    await uploadFileToGitHub(user, repo, token, 'app_data.json', appPayload, 'Update mobile app_data.json');
 
-    // 2. ترميز البيانات العربية إلى Base64 بشكل صحيح
-    const jsonStr = JSON.stringify(DATA, null, 2);
-    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
-
-    // 3. تحديث الملف على GitHub
-    const putRes = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: 'Update matches from RifKoora Admin',
-        content: base64Content,
-        sha
-      })
-    });
-
-    if(putRes.ok){
-      showMsg('✅ تم النشر بنجاح! سيتم تحديث الموقع والتطبيق خلال 30 ثانية.', false);
-    } else {
-      const err = await putRes.json();
-      showMsg('❌ فشل النشر: ' + (err.message || 'تأكد من صلاحية التوكن'), true);
-    }
+    showMsg(
+      `✅ تم النشر للموقع والتطبيق بنجاح!\n` +
+      `🔗 رابط بيانات التطبيق: https://${user}.github.io/${repo}/app_data.json`,
+      false
+    );
   } catch(e){
-    showMsg('❌ خطأ في الاتصال: ' + e.message, true);
+    showMsg('❌ خطأ أثناء النشر: ' + e.message, true);
   }
 }
 
@@ -293,6 +359,7 @@ function resetData(){
 function showMsg(t, isErr){
   const m = document.getElementById('msg');
   m.className = isErr ? 'err' : 'ok';
+  m.style.whiteSpace = 'pre-line';
   m.textContent = t;
 }
 document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
