@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RifKoora - لوحة التحكم</title>
+  <title>RifKoora - لوحة التحكم الذكية</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body{font-family:Cairo,sans-serif;background:#f4f6f9;margin:0;padding:16px;color:#111}
@@ -11,18 +11,22 @@
     .sub{color:#6b7280;margin-bottom:18px;font-size:14px}
     .card{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
     label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
-    input,select,textarea{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:14px}
+    input,select,textarea{width:100%;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;font-family:inherit;font-size:14px;box-sizing:border-box}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .btn{border:none;border-radius:12px;padding:12px 16px;font-family:inherit;font-weight:700;cursor:pointer;font-size:14px}
     .btn-primary{background:#1a56db;color:#fff;width:100%;margin-top:12px}
+    .btn-success{background:#16a34a;color:#fff;width:100%;margin-top:12px}
     .btn-soft{background:#eef2ff;color:#1a56db}
-    .btn-danger{background:#fee2e2;color:#b91c1c}
+    .btn-danger{background:#fee2e2;color:#b91c1c;padding:6px 10px;font-size:12px}
     table{width:100%;border-collapse:collapse;font-size:13px}
     th,td{padding:8px;border-bottom:1px solid #eee;text-align:right}
     .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .pass-box{max-width:360px;margin:60px auto;background:#fff;padding:24px;border-radius:16px}
     .hidden{display:none}
     .ok{background:#dcfce7;color:#166534;padding:10px 12px;border-radius:10px;margin-top:10px;font-size:13px}
+    .err{background:#fee2e2;color:#991b1b;padding:10px 12px;border-radius:10px;margin-top:10px;font-size:13px}
+    .draft-item{display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid #eee;border-radius:10px;margin-bottom:8px}
+    .draft-item input[type="checkbox"]{width:20px;height:20px;margin-left:10px}
   </style>
 </head>
 <body>
@@ -31,15 +35,38 @@
     <p class="sub">أدخل كلمة المرور للمتابعة</p>
     <input id="pass" type="password" placeholder="كلمة المرور" />
     <button class="btn btn-primary" onclick="doLogin()">دخول</button>
-    <p class="sub" style="margin-top:12px">الافتراضية: <b>admin123</b> (غيرها من الكود)</p>
   </div>
 
   <div id="panel" class="hidden">
     <h1>⚽ لوحة تحكم RifKoora</h1>
-    <p class="sub">أضف المباريات والترتيب ثم صدّر ملف data.json وارفعه مع الموقع على GitHub</p>
+    <p class="sub">اختر المباريات المجلوبة تلقائياً ثم اضغط "نشر مباشر" لتحديث الموقع والتطبيق فوراً</p>
 
+    <!-- إعدادات الربط مع GitHub -->
     <div class="card">
-      <h3>إضافة مباراة</h3>
+      <h3>⚙️ إعدادات النشر المباشر (تُحفظ في متصفحك مرة واحدة)</h3>
+      <div class="row">
+        <div><label>اسم المستخدم في GitHub</label><input id="ghUser" value="ithran1993-debug"></div>
+        <div><label>اسم المستودع</label><input id="ghRepo" value="rifkoora"></div>
+      </div>
+      <label>GitHub Personal Access Token</label>
+      <input id="ghToken" type="password" placeholder="github_pat_...">
+      <button class="btn btn-soft" style="margin-top:10px" onclick="saveGhConfig()">💾 حفظ إعدادات GitHub</button>
+    </div>
+
+    <!-- قسم الجلب التلقائي -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>📡 مباريات اليوم المجلوبة تلقائياً</h3>
+        <button class="btn btn-soft" onclick="loadDraft()">🔄 تحديث القائمة</button>
+      </div>
+      <p class="sub" id="draftStatus">جاري تحميل المسودة...</p>
+      <div id="draftList" style="max-height:320px;overflow:auto"></div>
+      <button class="btn btn-primary" onclick="addSelectedDrafts()">✅ إضافة المباريات المختارة إلى قائمتي</button>
+    </div>
+
+    <!-- إضافة مباراة يدوياً -->
+    <div class="card">
+      <h3>➕ إضافة مباراة يدوياً</h3>
       <div class="row">
         <div><label>الدوري</label><input id="mLeague" placeholder="الدوري الإنجليزي"></div>
         <div><label>التاريخ</label><input id="mDate" type="date"></div>
@@ -63,71 +90,104 @@
         <div><label>نتيجة المضيف</label><input id="mSH" type="number" placeholder="-"></div>
         <div><label>نتيجة الضيف</label><input id="mSA" type="number" placeholder="-"></div>
       </div>
-      <label>الدقيقة (إذا جارية)</label>
-      <input id="mMin" type="number" placeholder="67">
+      <div class="row">
+        <div><label>الدقيقة (إذا جارية)</label><input id="mMin" type="number" placeholder="67"></div>
+        <div><label>القناة الناقلة</label><input id="mChannel" placeholder="beIN Sports 1"></div>
+      </div>
       <button class="btn btn-primary" onclick="addMatch()">➕ إضافة المباراة</button>
     </div>
 
+    <!-- المباريات المنشورة -->
     <div class="card">
-      <h3>المباريات الحالية</h3>
+      <h3>📋 المباريات المعتمدة للنشر (<span id="countMatches">0</span>)</h3>
       <div style="overflow:auto">
         <table>
-          <thead><tr><th>#</th><th>الدوري</th><th>المباراة</th><th>اليوم</th><th>الوقت</th><th></th></tr></thead>
+          <thead><tr><th>الدوري</th><th>المباراة</th><th>النتيجة</th><th>الوقت</th><th></th></tr></thead>
           <tbody id="matchTable"></tbody>
         </table>
       </div>
     </div>
 
+    <!-- النشر المباشر -->
     <div class="card">
-      <h3>إضافة فريق للترتيب</h3>
-      <div class="row">
-        <div><label>الدوري</label><input id="sLeague" placeholder="الدوري الإنجليزي"></div>
-        <div><label>الفريق</label><input id="sTeam" placeholder="ليفربول"></div>
-      </div>
-      <div class="row">
-        <div><label>الترتيب</label><input id="sRank" type="number" value="1"></div>
-        <div><label>نقاط</label><input id="sPts" type="number" value="0"></div>
-      </div>
-      <div class="row">
-        <div><label>لعب</label><input id="sP" type="number" value="0"></div>
-        <div><label>فاز</label><input id="sW" type="number" value="0"></div>
-      </div>
-      <div class="row">
-        <div><label>تعادل</label><input id="sD" type="number" value="0"></div>
-        <div><label>خسارة</label><input id="sL" type="number" value="0"></div>
-      </div>
-      <button class="btn btn-primary" onclick="addStanding()">➕ إضافة للترتيب</button>
-    </div>
-
-    <div class="card">
-      <h3>تصدير ونشر</h3>
-      <p class="sub">بعد التعديل: حمّل data.json ثم ارفعه على GitHub مكان الملف القديم</p>
+      <h3>🚀 النشر المباشر للموقع والتطبيق</h3>
+      <button class="btn btn-success" onclick="publishToGitHub()">🚀 إرسال ونشر التحديث الآن</button>
       <div class="actions">
-        <button class="btn btn-soft" onclick="exportJSON()">⬇ تحميل data.json</button>
-        <button class="btn btn-soft" onclick="loadFromFile()">📂 استيراد data.json</button>
+        <button class="btn btn-soft" onclick="exportJSON()">⬇ تحميل نسخة احتياطية</button>
         <button class="btn btn-danger" onclick="resetData()">🗑 مسح الكل</button>
       </div>
-      <input id="fileInput" type="file" accept="application/json" class="hidden" onchange="importFile(event)">
       <div id="msg"></div>
     </div>
   </div>
 
 <script>
-const PASS = 'admin123'; // غيّرها
+const PASS = 'admin123';
 let DATA = { matches: [], standings: {}, news: [] };
+let DRAFT_MATCHES = [];
 
 function doLogin(){
   if(document.getElementById('pass').value === PASS){
     document.getElementById('login').classList.add('hidden');
     document.getElementById('panel').classList.remove('hidden');
-    const saved = localStorage.getItem('rifkoora_data');
-    if(saved){ try{ DATA = JSON.parse(saved); }catch(e){} }
-    else { fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;saveLocal();renderMatches();}).catch(()=>{}); }
-    renderMatches();
+    loadGhConfig();
+    fetch('data.json?t=' + Date.now()).then(r=>r.json()).then(d=>{
+      DATA = d;
+      renderMatches();
+    }).catch(()=>{});
+    loadDraft();
   } else alert('كلمة المرور خاطئة');
 }
 
-function saveLocal(){ localStorage.setItem('rifkoora_data', JSON.stringify(DATA)); }
+function saveGhConfig(){
+  localStorage.setItem('gh_user', val('ghUser'));
+  localStorage.setItem('gh_repo', val('ghRepo'));
+  localStorage.setItem('gh_token', val('ghToken'));
+  showMsg('تم حفظ إعدادات GitHub في متصفحك بنجاح', false);
+}
+
+function loadGhConfig(){
+  if(localStorage.getItem('gh_user')) document.getElementById('ghUser').value = localStorage.getItem('gh_user');
+  if(localStorage.getItem('gh_repo')) document.getElementById('ghRepo').value = localStorage.getItem('gh_repo');
+  if(localStorage.getItem('gh_token')) document.getElementById('ghToken').value = localStorage.getItem('gh_token');
+}
+
+function loadDraft(){
+  fetch('draft_data.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(d => {
+      DRAFT_MATCHES = d.matches || [];
+      document.getElementById('draftStatus').textContent = `آخر تحديث تلقائي: ${new Date(d.updatedAt).toLocaleTimeString('ar-MA')} (${DRAFT_MATCHES.length} مباراة)`;
+      const list = document.getElementById('draftList');
+      list.innerHTML = DRAFT_MATCHES.map((m, idx) => `
+        <label class="draft-item">
+          <div style="display:flex;align-items:center">
+            <input type="checkbox" class="draft-chk" value="${idx}">
+            <div>
+              <strong>${m.home} × ${m.away}</strong>
+              <div style="font-size:12px;color:#666">${m.league} • ${m.time} ${m.channel ? '• ' + m.channel : ''}</div>
+            </div>
+          </div>
+          <span style="font-size:12px;background:#eef2ff;padding:3px 8px;border-radius:6px">${m.status}</span>
+        </label>
+      `).join('') || '<p>لا توجد مباريات في المسودة حالياً.</p>';
+    })
+    .catch(() => {
+      document.getElementById('draftStatus').textContent = 'لم يتم تشغيل الجلب التلقائي بعد (شغّل Action من GitHub).';
+    });
+}
+
+function addSelectedDrafts(){
+  const chks = document.querySelectorAll('.draft-chk:checked');
+  if(!chks.length) return alert('اختر مباراة واحدة على الأقل');
+  chks.forEach(c => {
+    const m = DRAFT_MATCHES[Number(c.value)];
+    const exists = DATA.matches.some(x => x.home === m.home && x.away === m.away && x.date === m.date);
+    if(!exists) DATA.matches.push(m);
+    c.checked = false;
+  });
+  renderMatches();
+  showMsg(`تمت إضافة ${chks.length} مباريات إلى قائمة النشر. اضغط "إرسال ونشر" لتفعيلها.`, false);
+}
 
 function addMatch(){
   const m = {
@@ -135,69 +195,106 @@ function addMatch(){
     league: val('mLeague'),
     home: val('mHome'),
     away: val('mAway'),
+    homeLogo: '',
+    awayLogo: '',
     date: val('mDate') || new Date().toISOString().slice(0,10),
     time: val('mTime') || '20:00',
     status: val('mStatus'),
     scoreHome: num('mSH'),
     scoreAway: num('mSA'),
-    minute: num('mMin')
+    minute: num('mMin'),
+    channel: val('mChannel')
   };
   if(!m.home || !m.away) return alert('أدخل اسم الفريقين');
   DATA.matches.push(m);
-  saveLocal(); renderMatches(); showMsg('تمت إضافة المباراة');
+  renderMatches();
+  showMsg('تمت إضافة المباراة إلى القائمة', false);
 }
-function val(id){ return document.getElementById(id).value.trim(); }
-function num(id){ const v=document.getElementById(id).value; return v===''? null : Number(v); }
 
 function renderMatches(){
+  document.getElementById('countMatches').textContent = DATA.matches.length;
   const tb = document.getElementById('matchTable');
-  tb.innerHTML = (DATA.matches||[]).slice().reverse().map((m,i)=>`<tr>
-    <td>${i+1}</td><td>${m.league||''}</td>
-    <td>${m.home} × ${m.away}</td>
-    <td>${m.date}</td><td>${m.time}</td>
+  tb.innerHTML = (DATA.matches||[]).map((m)=>`<tr>
+    <td>${m.league||''}</td>
+    <td><b>${m.home}</b> × <b>${m.away}</b></td>
+    <td>${m.scoreHome !== null ? m.scoreHome + ' - ' + m.scoreAway : '-'}</td>
+    <td>${m.time}</td>
     <td><button class="btn btn-danger" onclick="delMatch(${m.id})">حذف</button></td>
-  </tr>`).join('') || '<tr><td colspan="6">لا مباريات</td></tr>';
+  </tr>`).join('') || '<tr><td colspan="5">لا توجد مباريات مختارة للنشر</td></tr>';
 }
+
 function delMatch(id){
   DATA.matches = DATA.matches.filter(m=>m.id!==id);
-  saveLocal(); renderMatches();
+  renderMatches();
 }
 
-function addStanding(){
-  const league = val('sLeague');
-  const team = val('sTeam');
-  if(!league || !team) return alert('أدخل الدوري والفريق');
-  if(!DATA.standings[league]) DATA.standings[league]=[];
-  DATA.standings[league] = DATA.standings[league].filter(r=>r.team!==team);
-  DATA.standings[league].push({
-    rank: num('sRank')||1, team,
-    played: num('sP')||0, win: num('sW')||0, draw: num('sD')||0, lose: num('sL')||0,
-    gf:0, ga:0, points: num('sPts')||0
-  });
-  DATA.standings[league].sort((a,b)=>a.rank-b.rank);
-  saveLocal(); showMsg('تمت إضافة الفريق للترتيب');
+async function publishToGitHub(){
+  const user = val('ghUser');
+  const repo = val('ghRepo');
+  const token = val('ghToken');
+  if(!user || !repo || !token) return showMsg('يرجى إدخال وحفظ إعدادات GitHub Token أولاً في الأعلى', true);
+
+  showMsg('⏳ جاري الإرسال والنشر إلى GitHub...', false);
+  const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/data.json`;
+
+  try {
+    // 1. جلب SHA الحالي للملف
+    const getRes = await fetch(apiUrl, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    let sha = undefined;
+    if(getRes.ok){
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+
+    // 2. ترميز البيانات العربية إلى Base64 بشكل صحيح
+    const jsonStr = JSON.stringify(DATA, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    // 3. تحديث الملف على GitHub
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'Update matches from RifKoora Admin',
+        content: base64Content,
+        sha
+      })
+    });
+
+    if(putRes.ok){
+      showMsg('✅ تم النشر بنجاح! سيتم تحديث الموقع والتطبيق خلال 30 ثانية.', false);
+    } else {
+      const err = await putRes.json();
+      showMsg('❌ فشل النشر: ' + (err.message || 'تأكد من صلاحية التوكن'), true);
+    }
+  } catch(e){
+    showMsg('❌ خطأ في الاتصال: ' + e.message, true);
+  }
 }
 
+function val(id){ return document.getElementById(id).value.trim(); }
+function num(id){ const v=document.getElementById(id).value; return v===''? null : Number(v); }
 function exportJSON(){
   const blob = new Blob([JSON.stringify(DATA,null,2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'data.json';
   a.click();
-  showMsg('تم تحميل data.json — ارفعه على GitHub');
-}
-function loadFromFile(){ document.getElementById('fileInput').click(); }
-function importFile(e){
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{ try{ DATA=JSON.parse(r.result); saveLocal(); renderMatches(); showMsg('تم الاستيراد'); }catch(err){ alert('ملف غير صالح'); } };
-  r.readAsText(f);
 }
 function resetData(){
-  if(confirm('مسح كل البيانات؟')){ DATA={matches:[],standings:{},news:[]}; saveLocal(); renderMatches(); }
+  if(confirm('مسح كل المباريات المختارة؟')){ DATA.matches=[]; renderMatches(); }
 }
-function showMsg(t){ const m=document.getElementById('msg'); m.className='ok'; m.textContent=t; }
-
+function showMsg(t, isErr){
+  const m = document.getElementById('msg');
+  m.className = isErr ? 'err' : 'ok';
+  m.textContent = t;
+}
 document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
 </script>
 </body>
